@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le Baron — Espace gérant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="authGate" id="authGate">
+  <form class="card authCard" id="loginForm" novalidate>
+    <div class="brandmark" style="margin-bottom:18px;justify-content:center">
+      <svg width="26" height="26" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 3 L24 15 L36 15 L26 22 L30 34 L20 26 L10 34 L14 22 L4 15 L16 15 Z" stroke="var(--gold)" stroke-width="1.4"/>
+      </svg>
+      <span class="neon">Le Baron</span>
+    </div>
+    <h2 style="font-size:1.4rem;margin-bottom:18px;text-align:center">Connexion gérant</h2>
+    <div class="field"><label for="loginEmail">E-mail</label><input id="loginEmail" type="email" autocomplete="username" required></div>
+    <div class="field"><label for="loginPass">Mot de passe</label><input id="loginPass" type="password" autocomplete="current-password" required></div>
+    <button class="btn block" type="submit">Se connecter</button>
+    <p class="errorMsg" id="loginError">E-mail ou mot de passe incorrect.</p>
+    <p style="margin-top:16px;font-size:.8rem;text-align:center"><a href="index.html" style="color:var(--smoke)">← Retour au site public</a></p>
+  </form>
+</div>
+
+<div class="adminShell" id="adminShell" style="display:none">
+  <aside class="adminSide">
+    <div class="brandmark" style="margin-bottom:26px">
+      <svg width="26" height="26" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 3 L24 15 L36 15 L26 22 L30 34 L20 26 L10 34 L14 22 L4 15 L16 15 Z" stroke="var(--gold)" stroke-width="1.4"/>
+      </svg>
+      <span class="neon" style="font-size:1.05rem">Le Baron</span>
+    </div>
+    <a href="#" class="navlink active" data-target="dashboard">Tableau de bord</a>
+    <a href="#" class="navlink" data-target="reservations">Réservations</a>
+    <a href="#" class="navlink" data-target="guestlist">Guestlist</a>
+    <a href="#" class="navlink" data-target="billets">Billetterie &amp; scan</a>
+    <a href="#" class="navlink" data-target="agenda">Agenda</a>
+    <a href="#" class="navlink" data-target="crm">CRM Clients VIP</a>
+    <a href="#" class="navlink" data-target="privatisations">Privatisations</a>
+    <a href="#" class="navlink" data-target="parametres">Paramètres</a>
+    <hr class="rule" style="margin:18px 0">
+    <a href="index.html">← Retour au site public</a>
+    <a href="#" id="logoutBtn" style="color:var(--riot)">Se déconnecter</a>
+  </aside>
+
+  <main class="adminMain">
+
+    <section class="panel" id="panel-dashboard">
+      <h2 style="margin-bottom:22px">Tableau de bord</h2>
+      <div class="statGrid" id="statGrid"></div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Dernières demandes</h3>
+        <table class="dataTable" id="recentTable">
+          <thead><tr><th>Type</th><th>Nom</th><th>Date</th><th>Statut</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-reservations" style="display:none">
+      <h2 style="margin-bottom:22px">Réservations de tables</h2>
+      <div class="adminPanel">
+        <table class="dataTable">
+          <thead><tr><th>Nom</th><th>Contact</th><th>Date</th><th>Pers.</th><th>Espace</th><th>Package</th><th>Statut</th><th></th></tr></thead>
+          <tbody id="reservationsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-guestlist" style="display:none">
+      <h2 style="margin-bottom:22px">Guestlist</h2>
+      <div class="adminPanel">
+        <table class="dataTable">
+          <thead><tr><th>Nom</th><th>Contact</th><th>Date</th><th>Pers.</th><th>Statut</th><th></th></tr></thead>
+          <tbody id="guestlistBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-billets" style="display:none">
+      <h2 style="margin-bottom:22px">Billetterie &amp; contrôle d'accès</h2>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Valider un billet</h3>
+        <div class="scanBox">
+          <div>
+            <video id="scanVideo" autoplay muted playsinline></video>
+            <div style="margin-top:8px"><button class="btn ghost small" id="scanStart">Activer la caméra</button> <button class="btn ghost small" id="scanStop" style="display:none">Arrêter</button></div>
+          </div>
+          <div style="flex:1;min-width:220px">
+            <div class="field"><label for="manualCode">Ou saisir le code manuellement</label><input id="manualCode" placeholder="LB-XXXXXX"></div>
+            <button class="btn" id="manualCheck">Vérifier</button>
+            <div id="scanResult" style="margin-top:14px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Tous les billets</h3>
+        <table class="dataTable">
+          <thead><tr><th>Code</th><th>Nom</th><th>Soirée</th><th>Qté</th><th>Statut</th></tr></thead>
+          <tbody id="ticketsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-agenda" style="display:none">
+      <h2 style="margin-bottom:22px">Agenda des soirées</h2>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter une soirée</h3>
+        <form id="eventForm">
+          <div class="row2">
+            <div class="field"><label for="eNom">Nom de la soirée</label><input id="eNom" required></div>
+            <div class="field"><label for="eGenre">Style musical</label><input id="eGenre" placeholder="Afrobeat, Électro…"></div>
+          </div>
+          <div class="row2">
+            <div class="field"><label for="eDate">Date</label><input id="eDate" type="date" required></div>
+            <div class="field"><label for="eHeure">Heure</label><input id="eHeure" placeholder="23h00"></div>
+          </div>
+          <div class="field"><label for="eDesc">Description</label><textarea id="eDesc" rows="2"></textarea></div>
+          <button class="btn" type="submit">Publier la soirée</button>
+        </form>
+      </div>
+      <div class="adminPanel">
+        <table class="dataTable">
+          <thead><tr><th>Soirée</th><th>Date</th><th>Style</th><th></th></tr></thead>
+          <tbody id="eventsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-crm" style="display:none">
+      <h2 style="margin-bottom:22px">CRM — Clients VIP</h2>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter un client</h3>
+        <form id="clientForm">
+          <div class="row2">
+            <div class="field"><label for="cNom">Nom</label><input id="cNom" required></div>
+            <div class="field"><label for="cTel">Téléphone</label><input id="cTel"></div>
+          </div>
+          <div class="row2">
+            <div class="field"><label for="cAnniv">Anniversaire</label><input id="cAnniv" type="date"></div>
+            <div class="field"><label for="cDepense">Total dépensé (F CFA)</label><input id="cDepense" type="number" min="0" value="0"></div>
+          </div>
+          <div class="field"><label for="cNote">Notes (préférences, historique de venues…)</label><textarea id="cNote" rows="2"></textarea></div>
+          <button class="btn" type="submit">Ajouter au CRM</button>
+        </form>
+      </div>
+      <div class="adminPanel">
+        <table class="dataTable">
+          <thead><tr><th>Nom</th><th>Téléphone</th><th>Anniversaire</th><th>Dépensé</th><th>Notes</th></tr></thead>
+          <tbody id="clientsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-privatisations" style="display:none">
+      <h2 style="margin-bottom:22px">Demandes de privatisation</h2>
+      <div class="adminPanel">
+        <table class="dataTable">
+          <thead><tr><th>Nom / société</th><th>Contact</th><th>Date</th><th>Pers.</th><th>Notes</th><th>Statut</th><th></th></tr></thead>
+          <tbody id="privBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-parametres" style="display:none">
+      <h2 style="margin-bottom:22px">Paramètres</h2>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:10px">Mon compte</h3>
+        <p style="margin-bottom:14px">Connecté en tant que <strong id="myAccountEmail">—</strong>.</p>
+
+        <form id="changePassForm" style="margin-bottom:22px" novalidate>
+          <div class="row2">
+            <div class="field"><label for="curPass">Mot de passe actuel</label><input id="curPass" type="password" autocomplete="current-password" required></div>
+            <div class="field"><label for="newPass2">Nouveau mot de passe (6 car. min.)</label><input id="newPass2" type="password" autocomplete="new-password" minlength="6" required></div>
+          </div>
+          <button class="btn small" type="submit">Changer le mot de passe</button>
+          <p class="errorMsg" id="changePassError">—</p>
+          <div class="confirm" id="changePassConfirm">Mot de passe mis à jour.</div>
+        </form>
+
+        <p style="margin-bottom:10px">Vous pouvez supprimer ce compte gérant (par exemple, le compte par défaut créé via <code>creer-gerant.html</code>) une fois qu'un autre compte existe. <strong>Assurez-vous d'avoir créé un autre accès gérant avant</strong> (Paramètres → Comptes gérant, plus bas) : si c'est le seul compte, le supprimer vous bloquera hors de l'espace gérant.</p>
+        <button class="btn danger small" id="deleteMyAccount">Supprimer ce compte gérant</button>
+        <p class="errorMsg" id="deleteAccountError">—</p>
+      </div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:10px">Comptes gérant</h3>
+        <p style="margin-bottom:14px">Donnez accès à l'espace gérant à un membre de l'équipe sans passer par la console Firebase.</p>
+        <a class="btn small" href="creer-admin.html">Créer un accès gérant</a>
+      </div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:10px">État des données</h3>
+        <p style="margin-bottom:14px">Les données sont stockées sur Firebase Firestore et partagées en temps réel entre le site public et cet espace gérant, sur n'importe quel appareil. L'accès à cet espace est protégé par un compte (voir README pour créer/gérer les comptes gérant) ; pensez à durcir les règles Firestore avant l'ouverture réelle (voir <code>firestore.rules</code>).</p>
+        <button class="btn danger small" id="resetData">Réinitialiser toutes les données de test</button>
+      </div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:10px">Pixels &amp; analytics</h3>
+        <p>Le Meta Pixel et Google Analytics se branchent dans le <code>&lt;head&gt;</code> de <code>index.html</code> une fois le site déployé sur un vrai nom de domaine (ces scripts ne peuvent pas tourner correctement en test local en <code>file://</code>).</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/account.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

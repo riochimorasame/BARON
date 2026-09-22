@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le Baron — Club, Lomé</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="top" id="siteHeader">
+  <div class="nav">
+    <a href="#accueil" class="brandmark">
+      <svg class="logoRing" width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 3 L24 15 L36 15 L26 22 L30 34 L20 26 L10 34 L14 22 L4 15 L16 15 Z" stroke="var(--gold)" stroke-width="1.4"/>
+        <circle cx="20" cy="20" r="2.4" fill="var(--gold)"/>
+      </svg>
+      <span class="neon">Le Baron</span>
+    </a>
+    <nav class="links">
+      <div class="navScroll" id="navScroll">
+        <a href="#agenda">Agenda</a>
+        <a href="#reserver">Tables &amp; VIP</a>
+        <a href="#guestlist">Guestlist</a>
+        <a href="#billets">Billets</a>
+        <a href="#carte">Carte</a>
+        <a href="#infos">Infos</a>
+        <a href="#contact">Contact</a>
+        <a href="admin.html" style="opacity:.6">Espace gérant</a>
+      </div>
+      <a href="#reserver" class="btn">Réserver</a>
+    </nav>
+    <button class="menuToggle" id="menuToggle" aria-label="Menu" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<main id="accueil">
+  <section class="hero">
+    <video class="heroVideo" id="heroVideo" autoplay muted loop playsinline poster="assets/hero-poster.jpg">
+      <source src="assets/hero-teaser.mp4" type="video/mp4">
+    </video>
+    <div class="heroFallback" id="heroFallback"></div>
+    <div class="heroOverlay"></div>
+    <div class="heroStamp">Ouverture<br>bientôt</div>
+    <div class="heroContent wrap">
+      <h1>LOMÉ<br>A UN<br>NOUVEAU<br>BARON.</h1>
+      <p class="lede">Afrobeat, amapiano, hip-hop, électro — une identité différente chaque semaine, sous un même toit. Entrez dans la guestlist d'ouverture avant tout le monde.</p>
+      <div class="ctas">
+        <a href="#guestlist" class="btn">Rejoindre la guestlist</a>
+        <a href="#agenda" class="btn ghost">Voir le programme</a>
+      </div>
+      <div class="heroNext" id="heroNext" style="display:none">
+        <span class="dot"></span>
+        <div><strong id="heroNextName">Prochaine soirée</strong><p id="heroNextDate"></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="agenda">
+    <div class="wrap">
+      <div class="sectionHead">
+        <h2>L'agenda</h2>
+        <p class="lede">Cliquez un jour marqué pour voir la soirée et réserver directement.</p>
+      </div>
+      <div class="formGrid" style="grid-template-columns:1fr 1fr">
+        <div class="calendarWrap">
+          <div class="calHead">
+            <button class="btn ghost small" id="calPrev">←</button>
+            <h3 id="calMonthLabel"></h3>
+            <button class="btn ghost small" id="calNext">→</button>
+          </div>
+          <div class="calGrid" id="calGrid"></div>
+          <div class="calDetail" id="calDetail"></div>
+        </div>
+        <div class="agendaGrid" id="agendaGrid" style="grid-template-columns:1fr"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="reserver">
+    <div class="wrap">
+      <div class="sectionHead">
+        <h2>Tables &amp; carrés VIP</h2>
+        <p class="lede">Sélectionnez la date, l'espace et le package — l'équipe confirme sous 24h.</p>
+      </div>
+      <div class="formGrid">
+        <form class="card" id="reservationForm" novalidate>
+          <div class="row2">
+            <div class="field"><label for="rNom">Nom complet</label><input id="rNom" name="nom" required></div>
+            <div class="field"><label for="rTel">Téléphone</label><input id="rTel" name="tel" type="tel" required></div>
+          </div>
+          <div class="field"><label for="rEmail">E-mail</label><input id="rEmail" name="email" type="email" required></div>
+          <div class="row2">
+            <div class="field"><label for="rDate">Date de la soirée</label><input id="rDate" name="date" type="date" required></div>
+            <div class="field"><label for="rPersonnes">Nombre de personnes</label><input id="rPersonnes" name="personnes" type="number" min="1" max="30" value="4" required></div>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="rCarre">Espace</label>
+              <select id="rCarre" name="carre">
+                <option>Table Bar</option>
+                <option>Carré VIP</option>
+                <option>Cigar Hall (VIP)</option>
+                <option>Espace Prestige</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="rPackage">Package bouteilles</label>
+              <select id="rPackage" name="package">
+                <option>À définir avec l'hôtesse</option>
+                <option>Spiritueux standard</option>
+                <option>Spiritueux premium</option>
+                <option>Champagne</option>
+              </select>
+            </div>
+          </div>
+          <div class="field"><label for="rNote">Message (optionnel)</label><textarea id="rNote" name="note" rows="3" placeholder="Anniversaire, occasion particulière, demande spécifique…"></textarea></div>
+          <button class="btn block" type="submit">Envoyer la demande de réservation</button>
+          <p class="errorMsg" id="rError">Merci de renseigner tous les champs requis.</p>
+          <div class="confirm" id="rConfirm">Demande envoyée — confirmation par téléphone ou e-mail sous 24h.</div>
+        </form>
+        <div class="noteBox">
+          <strong>Comment ça marche ?</strong>
+          <p style="margin-top:8px">Votre demande part directement à l'équipe de réservation. Rien n'est débité maintenant — un hôte du Baron revient vers vous pour confirmer disponibilité, tarif et modalités de paiement.</p>
+          <p style="margin-top:14px">Besoin d'une réponse rapide ? <a href="#contact" style="color:var(--gold-bright)">Écrivez sur WhatsApp</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="guestlist">
+    <div class="wrap">
+      <div class="sectionHead">
+        <h2>Guestlist — spécial lancement</h2>
+        <p class="lede">Tentez un accès exclusif et coupe-file pour la soirée d'inauguration.</p>
+      </div>
+      <div class="formGrid">
+        <form class="card" id="guestForm" novalidate>
+          <div class="row2">
+            <div class="field"><label for="gNom">Nom complet</label><input id="gNom" name="nom" required></div>
+            <div class="field"><label for="gTel">Téléphone</label><input id="gTel" name="tel" type="tel" required></div>
+          </div>
+          <div class="row2">
+            <div class="field"><label for="gDate">Date souhaitée</label><input id="gDate" name="date" type="date" required></div>
+            <div class="field"><label for="gPersonnes">Nombre de personnes</label><input id="gPersonnes" name="personnes" type="number" min="1" max="10" value="2" required></div>
+          </div>
+          <div class="field"><label for="gEmail">E-mail</label><input id="gEmail" name="email" type="email" required></div>
+          <button class="btn block" type="submit">Demander l'accès</button>
+          <p class="errorMsg" id="gError">Merci de renseigner tous les champs requis.</p>
+          <div class="confirm" id="gConfirm">Demande envoyée — votre nom sera examiné par l'équipe.</div>
+        </form>
+        <div class="noteBox">
+          <strong>À savoir</strong>
+          <p style="margin-top:8px">La guestlist est limitée et validée au cas par cas. Une place en liste ne garantit pas l'entrée en cas d'affluence exceptionnelle.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="billets">
+    <div class="wrap">
+      <div class="sectionHead">
+        <h2>Billetterie</h2>
+        <p class="lede">Pour les soirées à entrée payante, achetez votre billet et présentez le QR code à l'entrée.</p>
+      </div>
+      <div class="formGrid">
+        <form class="card" id="ticketForm" novalidate>
+          <div class="field"><label for="tSoiree">Soirée</label><select id="tSoiree" name="soiree"></select></div>
+          <div class="row2">
+            <div class="field"><label for="tNom">Nom complet</label><input id="tNom" name="nom" required></div>
+            <div class="field"><label for="tTel">Téléphone</label><input id="tTel" name="tel" type="tel" required></div>
+          </div>
+          <div class="row2">
+            <div class="field"><label for="tEmail">E-mail</label><input id="tEmail" name="email" type="email" required></div>
+            <div class="field"><label for="tQte">Nombre de billets</label><input id="tQte" name="qte" type="number" min="1" max="10" value="1" required></div>
+          </div>
+          <button class="btn block" type="submit">Générer mon billet</button>
+          <p class="errorMsg" id="tError">Merci de renseigner tous les champs requis.</p>
+          <div class="qrPanel" id="qrPanel" style="display:none">
+            <div id="qrHolder"></div>
+            <div>
+              <div style="font-size:.8rem;color:var(--fg-dim)">Code de votre billet</div>
+              <div class="qrCode-text" id="qrCodeText"></div>
+              <p style="font-size:.82rem;margin-top:6px">Capture d'écran conseillée — ce code sera scanné à l'entrée.</p>
+            </div>
+          </div>
+        </form>
+        <div class="noteBox">
+          <strong>Paiement</strong>
+          <p style="margin-top:8px">Le billet est pré-généré avec un code unique ; le paiement en ligne (Mobile Money, carte) sera branché à l'étape Firebase.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="carte">
+    <div class="wrap">
+      <div class="sectionHead">
+        <h2>La carte</h2>
+        <p class="lede">Cocktails signature, spiritueux et formules carré — tarifs indicatifs.</p>
+      </div>
+      <div class="menuCols">
+        <div><h3>Cocktails signature</h3>
+          <ul class="menuList">
+            <li><span>Baron's Mule</span><span>6 000 F</span></li>
+            <li><span>Fleur de Wine</span><span>6 500 F</span></li>
+            <li><span>Amber Baron</span><span>7 000 F</span></li>
+            <li><span>Gold Rush Lomé</span><span>6 500 F</span></li>
+          </ul>
+        </div>
+        <div><h3>Spiritueux</h3>
+          <ul class="menuList">
+            <li><span>Whisky premium (verre)</span><span>5 000 F</span></li>
+            <li><span>Vodka premium (verre)</span><span>4 500 F</span></li>
+            <li><span>Gin signature (verre)</span><span>4 500 F</span></li>
+            <li><span>Cognac VSOP (verre)</span><span>7 500 F</span></li>
+          </ul>
+        </div>
+        <div><h3>Champagne &amp; bulles</h3>
+          <ul class="menuList">
+            <li><span>Coupe de champagne</span><span>8 000 F</span></li>
+            <li><span>Bouteille champagne</span><span>85 000 F</span></li>
+            <li><span>Bouteille prestige</span><span>150 000 F</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="carreGrid">
+        <div class="carreCard"><div class="tag" style="border-color:var(--line)">Table Bar</div><div class="price">150 000 F</div><p>4–6 pers · spiritueux standard, mixers, place assise garantie.</p></div>
+        <div class="carreCard"><div class="tag">Carré VIP</div><div class="price">300 000 F</div><p>6–8 pers · bouteille premium, service dédié, vue sur la piste.</p></div>
+        <div class="carreCard"><div class="tag">Cigar Hall · VIP</div><div class="price">350 000 F</div><p>4–8 pers · salon fumoir séparé, cave à cigares et spiritueux d'exception, service dédié.</p></div>
+        <div class="carreCard"><div class="tag">Espace Prestige</div><div class="price">600 000 F</div><p>8–12 pers · champagne et spiritueux haut de gamme, hôte personnel.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="galerie">
+    <div class="wrap">
+      <div class="sectionHead">
+        <h2>Galerie</h2>
+        <p class="lede">Le flux Instagram / TikTok du club viendra remplacer ces vignettes automatiquement.</p>
+      </div>
+      <div class="galleryGrid">
+        <img class="g1" src="https://loremflickr.com/500/500/nightclub?lock=1" alt="Ambiance Le Baron">
+        <img class="g2" src="https://loremflickr.com/500/500/dj,party?lock=2" alt="Ambiance Le Baron">
+        <img class="g3" src="https://loremflickr.com/500/500/dance,club?lock=3" alt="Ambiance Le Baron">
+        <img class="g4" src="https://loremflickr.com/500/500/neon,party?lock=4" alt="Ambiance Le Baron">
+        <img class="g5" src="https://loremflickr.com/500/500/concert,crowd?lock=5" alt="Ambiance Le Baron">
+        <img class="g6" src="https://loremflickr.com/500/500/cocktail,bar?lock=6" alt="Ambiance Le Baron">
+        <img class="g7" src="https://loremflickr.com/500/500/dance,floor?lock=7" alt="Ambiance Le Baron">
+        <img class="g8" src="https://loremflickr.com/500/500/club,lights?lock=8" alt="Ambiance Le Baron">
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="infos">
+    <div class="wrap">
+      <div class="sectionHead"><h2>Infos pratiques</h2></div>
+      <div class="infoGrid">
+        <div><h3>Dress code</h3><p>Tenue chic / élégante exigée. Pas de tenue de sport, tongs ni débardeurs. L'accès reste à l'appréciation de la sécurité.</p></div>
+        <div><h3>Âge minimum</h3><p>18 ans révolus. Pièce d'identité valide exigée à l'entrée.</p></div>
+        <div><h3>Horaires</h3><p>Jeudi – Dimanche, 22h00 – 05h00. Fermé lundi, mardi, mercredi (sauf soirées privées).</p></div>
+        <div><h3>Parking &amp; taxis</h3><p>Parking gardé sur place, station de taxis à proximité immédiate.</p></div>
+      </div>
+      <div class="mapEmbed">
+        <iframe loading="lazy" src="https://www.google.com/maps?q=Avenue%20de%20la%20Lib%C3%A9ration%2C%20Lom%C3%A9%2C%20Togo&output=embed" allowfullscreen></iframe>
+      </div>
+      <div class="contactRow" id="contact">
+        <a class="btn" href="https://wa.me/22890000000" target="_blank" rel="noopener">Contacter sur WhatsApp</a>
+        <a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=Avenue+de+la+Lib%C3%A9ration+Lom%C3%A9" target="_blank" rel="noopener">Ouvrir l'itinéraire</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="privatisation">
+    <div class="wrap">
+      <div class="sectionHead">
+        <h2>Privatiser le club</h2>
+        <p class="lede">Entreprise, anniversaire, lancement — le Baron peut être privatisé en semaine ou en soirée dédiée.</p>
+      </div>
+      <div class="formGrid">
+        <form class="card" id="privForm" novalidate>
+          <div class="row2">
+            <div class="field"><label for="pNom">Nom / société</label><input id="pNom" name="nom" required></div>
+            <div class="field"><label for="pTel">Téléphone</label><input id="pTel" name="tel" type="tel" required></div>
+          </div>
+          <div class="row2">
+            <div class="field"><label for="pDate">Date envisagée</label><input id="pDate" name="date" type="date" required></div>
+            <div class="field"><label for="pPersonnes">Nombre de personnes estimé</label><input id="pPersonnes" name="personnes" type="number" min="10" max="500" value="50" required></div>
+          </div>
+          <div class="field"><label for="pEmail">E-mail</label><input id="pEmail" name="email" type="email" required></div>
+          <div class="field"><label for="pNote">Détails</label><textarea id="pNote" name="note" rows="3" placeholder="Type d'événement, budget approximatif, besoins particuliers…"></textarea></div>
+          <button class="btn block" type="submit">Envoyer la demande</button>
+          <p class="errorMsg" id="pError">Merci de renseigner tous les champs requis.</p>
+          <div class="confirm" id="pConfirm">Demande transmise — l'équipe événementiel vous recontacte sous peu.</div>
+        </form>
+        <div class="noteBox">
+          <strong>Ce qui est inclus</strong>
+          <p style="margin-top:8px">Espace exclusif, régie son et lumière, sécurité dédiée, DJ résident sur mesure.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footGrid">
+      <div>
+        <div class="brandmark" style="margin-bottom:10px">
+          <svg width="26" height="26" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 3 L24 15 L36 15 L26 22 L30 34 L20 26 L10 34 L14 22 L4 15 L16 15 Z" stroke="var(--gold)" stroke-width="1.4"/>
+          </svg>
+          <span style="font-family:var(--font-display);font-size:1.1rem">Le Baron</span>
+        </div>
+        <p style="max-width:34ch">Avenue de la Libération, Lomé, Togo.</p>
+      </div>
+      <div style="max-width:340px">
+        <h3 style="font-family:var(--font-display);font-weight:500;font-size:1rem;margin-bottom:6px">Restez informés</h3>
+        <p>Programme des soirées et accès prioritaires, par e-mail.</p>
+        <form class="newsletterForm" id="newsForm">
+          <input type="email" id="newsEmail" placeholder="Votre e-mail" required>
+          <button class="btn" type="submit">S'inscrire</button>
+        </form>
+        <div class="confirm" id="newsConfirm" style="margin-top:10px">Inscription enregistrée — merci !</div>
+      </div>
+    </div>
+    <hr class="rule" style="margin:34px 0">
+    <div class="legal">
+      <span>© <span id="year"></span> Le Baron. Entrée interdite aux moins de 18 ans.</span>
+      <span>Données synchronisées en temps réel — <a href="admin.html" style="color:var(--gold-bright)">espace gérant</a> (accès protégé)</span>
+    </div>
+  </div>
+</footer>
+
+<div class="audioWidget" id="audioWidget">
+  <button id="audioToggle" aria-label="Lecture">▶</button>
+  <div class="eq"><i></i><i></i><i></i></div>
+  <span>Ambiance Le Baron</span>
+</div>
+<audio id="ambianceAudio" loop preload="none">
+  <source src="assets/ambiance.mp3" type="audio/mpeg">
+</audio>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le Baron — Créer le premier accès gérant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="authGate" id="setupGate">
+  <div class="card authCard" id="setupCard">
+    <div class="brandmark" style="margin-bottom:18px;justify-content:center">
+      <svg width="26" height="26" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 3 L24 15 L36 15 L26 22 L30 34 L20 26 L10 34 L14 22 L4 15 L16 15 Z" stroke="var(--gold)" stroke-width="1.4"/>
+      </svg>
+      <span class="neon">Le Baron</span>
+    </div>
+
+    <div id="setupChecking">
+      <p style="text-align:center">Vérification…</p>
+    </div>
+
+    <form id="setupForm" novalidate style="display:none">
+      <h2 style="font-size:1.3rem;margin-bottom:6px;text-align:center">Créer le premier accès gérant</h2>
+      <p style="font-size:.82rem;margin-bottom:18px;text-align:center">Identifiants par défaut pré-remplis ci-dessous — vous pouvez cliquer directement sur "Créer", ou les modifier avant. Page à usage unique : une fois ce compte créé, elle se désactive d'elle-même. Pensez à changer ce mot de passe depuis <strong>admin.html → Paramètres → Mon compte</strong> une fois connecté.</p>
+      <div class="field"><label for="setupEmail">E-mail du compte gérant</label><input id="setupEmail" type="email" autocomplete="username" required></div>
+      <div class="field"><label for="setupPass">Mot de passe (6 caractères minimum)</label><input id="setupPass" type="text" autocomplete="new-password" minlength="6" required></div>
+      <button class="btn block" type="submit">Créer ce compte et verrouiller la page</button>
+      <p class="errorMsg" id="setupError">—</p>
+    </form>
+
+    <div id="setupDone" style="display:none">
+      <h2 style="font-size:1.3rem;margin-bottom:10px;text-align:center">Compte créé ✅</h2>
+      <p style="text-align:center">Identifiants : <strong id="setupDoneEmail"></strong> — <span id="setupDonePass" style="font-family:var(--font-mono)"></span></p>
+      <p style="text-align:center;margin-top:8px">Cette page est maintenant verrouillée. Notez ces identifiants, puis changez le mot de passe dès votre connexion via <strong>Paramètres → Mon compte</strong>.</p>
+      <a class="btn block" style="margin-top:18px" href="admin.html">Aller à l'espace gérant</a>
+    </div>
+
+    <div id="setupLocked" style="display:none">
+      <h2 style="font-size:1.3rem;margin-bottom:10px;text-align:center">Page déjà utilisée</h2>
+      <p style="text-align:center">Un premier compte gérant existe déjà. Pour en ajouter un autre, connectez-vous sur l'espace gérant puis utilisez <strong>Paramètres → Créer un accès gérant</strong>.</p>
+      <a class="btn block" style="margin-top:18px" href="admin.html">Aller à l'espace gérant</a>
+    </div>
+
+    <p style="margin-top:16px;font-size:.8rem;text-align:center"><a href="index.html" style="color:var(--smoke)">← Retour au site public</a></p>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="js/data.js"></script>
+<script src="js/creer-gerant.js"></script>
+</body>
+</html>

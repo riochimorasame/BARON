@@ -1,0 +1,206 @@
+(function () {
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // header scroll state
+  var header = document.getElementById("siteHeader");
+  window.addEventListener("scroll", function () {
+    header.classList.toggle("scrolled", window.scrollY > 8);
+  });
+
+  // hero video fallback if the file is missing (normal on first local test)
+  var video = document.getElementById("heroVideo");
+  var fallback = document.getElementById("heroFallback");
+  fallback.style.display = "none";
+  video.addEventListener("error", function () { fallback.style.display = "block"; video.style.display = "none"; });
+  video.addEventListener("stalled", function () { fallback.style.display = "block"; });
+  setTimeout(function () { if (video.readyState === 0) fallback.style.display = "block"; }, 1500);
+
+  // mobile menu
+  var toggle = document.getElementById("menuToggle");
+  var navScroll = document.getElementById("navScroll");
+  function setMenu(open) {
+    navScroll.classList.toggle("open", open);
+    toggle.textContent = open ? "✕" : "☰";
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+  toggle.addEventListener("click", function () {
+    setMenu(!navScroll.classList.contains("open"));
+  });
+  navScroll.addEventListener("click", function (e) {
+    if (e.target.tagName === "A") setMenu(false);
+  });
+
+  // audio widget
+  var audio = document.getElementById("ambianceAudio");
+  var audioBtn = document.getElementById("audioToggle");
+  var audioWidget = document.getElementById("audioWidget");
+  audioBtn.addEventListener("click", function () {
+    if (audio.paused) {
+      audio.play().catch(function () { /* fichier assets/ambiance.mp3 absent pour l'instant */ });
+      audioBtn.textContent = "❚❚";
+      audioWidget.classList.remove("paused");
+    } else {
+      audio.pause();
+      audioBtn.textContent = "▶";
+      audioWidget.classList.add("paused");
+    }
+  });
+  audioWidget.classList.add("paused");
+
+  function genId() { return Math.random().toString(36).slice(2, 8).toUpperCase(); }
+  function esc(s) { return (s || "").toString().replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function fmtDate(iso) {
+    if (!iso) return "";
+    var d = new Date(iso + "T00:00:00");
+    if (isNaN(d)) return iso;
+    return d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+  }
+
+  function showFormResult(errEl, confEl, ok, msg) {
+    if (ok) { errEl.classList.remove("show"); confEl.classList.add("show"); }
+    else { confEl.classList.remove("show"); errEl.classList.add("show"); if (msg) errEl.textContent = msg; }
+  }
+
+  function wireSimpleForm(formId, errId, confId, collectionName, mapFn) {
+    var form = document.getElementById(formId);
+    var err = document.getElementById(errId);
+    var conf = document.getElementById(confId);
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) { showFormResult(err, conf, false); return; }
+      var data = mapFn(new FormData(form));
+      data.status = "en_attente";
+      LB_DB.add(collectionName, data);
+      showFormResult(err, conf, true);
+      form.reset();
+    });
+  }
+
+  wireSimpleForm("reservationForm", "rError", "rConfirm", "reservations", function (fd) {
+    return { nom: fd.get("nom"), tel: fd.get("tel"), email: fd.get("email"), date: fd.get("date"),
+      personnes: Number(fd.get("personnes")), carre: fd.get("carre"), package: fd.get("package"), note: fd.get("note") };
+  });
+  wireSimpleForm("guestForm", "gError", "gConfirm", "guestlist", function (fd) {
+    return { nom: fd.get("nom"), tel: fd.get("tel"), email: fd.get("email"), date: fd.get("date"), personnes: Number(fd.get("personnes")) };
+  });
+  wireSimpleForm("privForm", "pError", "pConfirm", "privatizations", function (fd) {
+    return { nom: fd.get("nom"), tel: fd.get("tel"), email: fd.get("email"), date: fd.get("date"), personnes: Number(fd.get("personnes")), note: fd.get("note") };
+  });
+
+  document.getElementById("newsForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = document.getElementById("newsEmail").value;
+    LB_DB.add("newsletter", { email: email });
+    document.getElementById("newsConfirm").classList.add("show");
+    e.target.reset();
+  });
+
+  document.getElementById("ticketForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var form = e.target;
+    var err = document.getElementById("tError");
+    if (!form.checkValidity()) { err.classList.add("show"); return; }
+    err.classList.remove("show");
+    var fd = new FormData(form);
+    var code = "LB-" + genId();
+    var data = {
+      nom: fd.get("nom"), tel: fd.get("tel"), email: fd.get("email"),
+      qte: Number(fd.get("qte")), soiree: fd.get("soiree") || "Soirée à définir",
+      code: code, status: "valide",
+    };
+    LB_DB.add("tickets", data);
+
+    var panel = document.getElementById("qrPanel");
+    var holder = document.getElementById("qrHolder");
+    holder.innerHTML = "";
+    document.getElementById("qrCodeText").textContent = code;
+    panel.style.display = "flex";
+    try { new QRCode(holder, { text: code, width: 96, height: 96, colorDark: "#0B0A0D", colorLight: "#ffffff" }); }
+    catch (ex) { holder.textContent = code; }
+  });
+
+  // ---- agenda (liste) ----
+  function renderAgenda(events) {
+    var grid = document.getElementById("agendaGrid");
+    var select = document.getElementById("tSoiree");
+    if (!events.length) {
+      grid.innerHTML = '<div class="emptyState"><strong>Le programme arrive bientôt</strong>Ajoutez des soirées depuis l\'espace gérant.</div>';
+      select.innerHTML = "<option>Soirée à définir</option>";
+      document.getElementById("heroNext").style.display = "none";
+      return;
+    }
+    events.sort(function (a, b) { return (a.date || "").localeCompare(b.date || ""); });
+    grid.innerHTML = events.map(function (ev) {
+      return '<div class="stub"><span class="when">' + esc(fmtDate(ev.date)) + (ev.heure ? " · " + esc(ev.heure) : "") + "</span>" +
+        "<h3>" + esc(ev.nom || "Soirée") + "</h3>" +
+        "<p>" + esc(ev.description || "") + "</p>" +
+        (ev.genre ? '<span class="tag">' + esc(ev.genre) + "</span>" : "") +
+        '<div class="actions"><a href="#reserver" class="btn small">Réserver</a><a href="#billets" class="btn ghost small">Acheter un pass</a></div></div>';
+    }).join("");
+    select.innerHTML = events.map(function (ev) { return "<option>" + esc(ev.nom || "Soirée") + " — " + esc(fmtDate(ev.date)) + "</option>"; }).join("");
+    var next = events[0];
+    document.getElementById("heroNext").style.display = "flex";
+    document.getElementById("heroNextName").textContent = next.nom || "Prochaine soirée";
+    document.getElementById("heroNextDate").textContent = fmtDate(next.date) + (next.heure ? " · " + next.heure : "");
+  }
+
+  // ---- calendrier interactif ----
+  var calCursor = new Date();
+  calCursor.setDate(1);
+  var DOW = ["L", "M", "M", "J", "V", "S", "D"];
+
+  function eventsForMonth(events, year, month) {
+    var map = {};
+    events.forEach(function (ev) {
+      var d = new Date(ev.date + "T00:00:00");
+      if (d.getFullYear() === year && d.getMonth() === month) map[d.getDate()] = ev;
+    });
+    return map;
+  }
+
+  function renderCalendar(events) {
+    var year = calCursor.getFullYear(), month = calCursor.getMonth();
+    document.getElementById("calMonthLabel").textContent = calCursor.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+    var grid = document.getElementById("calGrid");
+    grid.innerHTML = DOW.map(function (d) { return '<div class="calDow">' + d + "</div>"; }).join("");
+    var first = new Date(year, month, 1);
+    var startOffset = (first.getDay() + 6) % 7; // lundi = 0
+    var daysInMonth = new Date(year, month + 1, 0).getDate();
+    var evMap = eventsForMonth(events, year, month);
+    for (var i = 0; i < startOffset; i++) grid.innerHTML += '<div class="calDay empty"></div>';
+    for (var day = 1; day <= daysInMonth; day++) {
+      var hasEv = !!evMap[day];
+      grid.innerHTML += '<div class="calDay' + (hasEv ? " has-event" : "") + '" data-day="' + day + '">' + day + (hasEv ? '<span class="d"></span>' : "") + "</div>";
+    }
+    Array.prototype.forEach.call(grid.querySelectorAll(".calDay.has-event"), function (el) {
+      el.addEventListener("click", function () {
+        var ev = evMap[Number(el.dataset.day)];
+        var detail = document.getElementById("calDetail");
+        detail.innerHTML = "<strong style=\"font-family:var(--font-display);font-size:1.05rem\">" + esc(ev.nom) + "</strong>" +
+          "<p style=\"margin-top:6px\">" + esc(fmtDate(ev.date)) + (ev.heure ? " · " + esc(ev.heure) : "") + "</p>" +
+          "<p style=\"margin-top:6px\">" + esc(ev.description || "") + "</p>" +
+          '<div class="actions" style="margin-top:12px"><a href="#reserver" class="btn small">Réserver</a> <a href="#billets" class="btn ghost small">Billets</a></div>';
+        detail.classList.add("show");
+      });
+    });
+  }
+
+  document.getElementById("calPrev").addEventListener("click", function () {
+    calCursor.setMonth(calCursor.getMonth() - 1);
+    renderCalendar(LB_DB.list("events"));
+  });
+  document.getElementById("calNext").addEventListener("click", function () {
+    calCursor.setMonth(calCursor.getMonth() + 1);
+    renderCalendar(LB_DB.list("events"));
+  });
+
+  function refreshAll() {
+    var events = LB_DB.list("events");
+    renderAgenda(events);
+    renderCalendar(events);
+  }
+  refreshAll();
+
+  // se met à jour en direct dès que Firestore renvoie de nouvelles données
+  window.addEventListener("lebaron:update", refreshAll);
+})();

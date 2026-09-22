@@ -1,0 +1,55 @@
+rules_version = '2';
+
+// Le Baron — règles Firestore.
+//
+// À copier-coller dans : console.firebase.google.com → votre projet →
+// Firestore Database → onglet "Règles" → remplacer le contenu → Publier.
+//
+// Logique :
+//  - "events" (l'agenda) : lecture publique (le site public l'affiche),
+//    écriture réservée aux comptes gérants connectés (admin.html).
+//  - "clients" (le CRM VIP) : entièrement réservé aux comptes gérants —
+//    jamais touché par le site public.
+//  - "reservations", "guestlist", "tickets", "privatizations",
+//    "newsletter" : n'importe qui peut CRÉER un document (c'est ce que
+//    font les formulaires du site public), mais seule une session gérant
+//    connectée peut les LIRE, les MODIFIER (confirmer/refuser/scanner) ou
+//    les SUPPRIMER. Un visiteur ne peut donc jamais relire les demandes
+//    des autres, ni changer leur statut.
+//  - "_setup/adminCreated" : verrou "usage unique" pour la page
+//    creer-gerant.html (premier compte gérant, sans connexion préalable).
+//    Le document ne peut être créé qu'une seule fois ; une fois créé,
+//    personne (même connecté) ne peut plus le modifier ou le supprimer —
+//    c'est ce qui rend la page réellement à usage unique, pas juste en
+//    apparence côté JavaScript.
+//  - Tout le reste est bloqué par défaut.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /_setup/adminCreated {
+      allow read: if true;
+      allow create: if !exists(/databases/$(database)/documents/_setup/adminCreated);
+      allow update, delete: if false;
+    }
+
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    match /clients/{clientId} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /{col}/{docId} {
+      allow create: if col in ['reservations', 'guestlist', 'tickets', 'privatizations', 'newsletter'];
+      allow read, update, delete: if request.auth != null
+        && col in ['reservations', 'guestlist', 'tickets', 'privatizations', 'newsletter'];
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
