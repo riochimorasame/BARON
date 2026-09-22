@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Le Baron — Espace gérant</title>
+<link rel="icon" type="image/png" href="assets/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,9 +15,7 @@
 <div class="authGate" id="authGate">
   <form class="card authCard" id="loginForm" novalidate>
     <div class="brandmark" style="margin-bottom:18px;justify-content:center">
-      <svg width="26" height="26" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20 3 L24 15 L36 15 L26 22 L30 34 L20 26 L10 34 L14 22 L4 15 L16 15 Z" stroke="var(--gold)" stroke-width="1.4"/>
-      </svg>
+      <img class="logoRing" src="assets/logo.png" width="34" height="34" alt="Le Baron">
       <span class="neon">Le Baron</span>
     </div>
     <h2 style="font-size:1.4rem;margin-bottom:18px;text-align:center">Connexion gérant</h2>
@@ -31,9 +30,7 @@
 <div class="adminShell" id="adminShell" style="display:none">
   <aside class="adminSide">
     <div class="brandmark" style="margin-bottom:26px">
-      <svg width="26" height="26" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20 3 L24 15 L36 15 L26 22 L30 34 L20 26 L10 34 L14 22 L4 15 L16 15 Z" stroke="var(--gold)" stroke-width="1.4"/>
-      </svg>
+      <img class="logoRing" src="assets/logo.png" width="30" height="30" alt="Le Baron">
       <span class="neon" style="font-size:1.05rem">Le Baron</span>
     </div>
     <a href="#" class="navlink active" data-target="dashboard">Tableau de bord</a>
@@ -42,6 +39,7 @@
     <a href="#" class="navlink" data-target="billets">Billetterie &amp; scan</a>
     <a href="#" class="navlink" data-target="agenda">Agenda</a>
     <a href="#" class="navlink" data-target="crm">CRM Clients VIP</a>
+    <a href="#" class="navlink" data-target="bar">Bar &amp; Dépenses</a>
     <a href="#" class="navlink" data-target="privatisations">Privatisations</a>
     <a href="#" class="navlink" data-target="parametres">Paramètres</a>
     <hr class="rule" style="margin:18px 0">
@@ -154,6 +152,84 @@
         <div class="tableWrap"><table class="dataTable">
           <thead><tr><th>Nom</th><th>Téléphone</th><th>Anniversaire</th><th>Dépensé</th><th>Notes</th></tr></thead>
           <tbody id="clientsBody"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-bar" style="display:none">
+      <h2 style="margin-bottom:22px">Bar &amp; Dépenses</h2>
+      <div class="statGrid" id="barStatGrid"></div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Créer une boisson / un cocktail</h3>
+        <form id="boissonForm">
+          <div class="row3">
+            <div class="field"><label for="bNom">Nom</label><input id="bNom" required></div>
+            <div class="field">
+              <label for="bCategorie">Catégorie</label>
+              <select id="bCategorie">
+                <option>Boisson</option>
+                <option>Cocktail</option>
+              </select>
+            </div>
+            <div class="field"><label for="bPrix">Prix (F CFA)</label><input id="bPrix" type="number" min="0" required></div>
+          </div>
+          <button class="btn" type="submit">Ajouter à la carte</button>
+        </form>
+      </div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Carte boissons &amp; cocktails</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Nom</th><th>Catégorie</th><th>Prix</th><th></th></tr></thead>
+          <tbody id="boissonsBody"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Enregistrer une dépense</h3>
+        <form id="depenseForm">
+          <div class="row3">
+            <div class="field">
+              <label for="dCategorie">Catégorie</label>
+              <select id="dCategorie">
+                <option>Boîte</option>
+                <option>Bar</option>
+                <option>Carré VIP</option>
+                <option>Cigar Hall</option>
+              </select>
+            </div>
+            <div class="field"><label for="dMontant">Montant (F CFA)</label><input id="dMontant" type="number" min="0" required></div>
+            <div class="field"><label for="dDate">Date</label><input id="dDate" type="date" required></div>
+          </div>
+          <div class="field"><label for="dDesc">Description</label><input id="dDesc" placeholder="Ex : achat glaçons, réparation frigo…"></div>
+          <button class="btn" type="submit">Enregistrer la dépense</button>
+        </form>
+      </div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Dépenses enregistrées</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Catégorie</th><th>Description</th><th>Montant</th><th></th></tr></thead>
+          <tbody id="depensesBody"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Compte rendu boissons</h3>
+        <form id="venteForm">
+          <div class="row3">
+            <div class="field"><label for="vBoisson">Boisson</label><select id="vBoisson"></select></div>
+            <div class="field"><label for="vQte">Quantité</label><input id="vQte" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="vSoiree">Soirée</label><select id="vSoiree"><option value="">— Non liée à une soirée —</option></select></div>
+          </div>
+          <div class="field"><label for="vDate">Date</label><input id="vDate" type="date" required></div>
+          <button class="btn" type="submit">Ajouter au compte rendu</button>
+        </form>
+      </div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Historique des ventes</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Soirée</th><th>Boisson</th><th>Qté</th><th>Montant</th><th></th></tr></thead>
+          <tbody id="ventesBody"></tbody>
         </table></div>
       </div>
     </section>

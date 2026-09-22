@@ -102,9 +102,80 @@
     }).join("") || '<tr><td colspan="5" style="color:var(--smoke)">Aucun client enregistré.</td></tr>';
   }
 
+  var DEPENSE_CATEGORIES = ["Boîte", "Bar", "Carré VIP", "Cigar Hall"];
+
+  function fillSelect(select, options, keep) {
+    var current = keep ? select.value : null;
+    select.innerHTML = options;
+    if (current) select.value = current;
+  }
+
+  function renderBoissons() {
+    var rows = LB_DB.list("boissons", { sortBy: "nom" });
+    document.getElementById("boissonsBody").innerHTML = rows.map(function (r) {
+      return "<tr><td>" + esc(r.nom) + "</td><td>" + esc(r.categorie) + "</td><td>" + Number(r.prix || 0).toLocaleString("fr-FR") + " F</td>" +
+        '<td><button class="btn ghost small" data-del-boisson="' + r.id + '">Supprimer</button></td></tr>';
+    }).join("") || '<tr><td colspan="4" style="color:var(--smoke)">Aucune boisson sur la carte.</td></tr>';
+
+    // recharge le sélecteur "compte rendu" à partir de la carte
+    var vBoisson = document.getElementById("vBoisson");
+    fillSelect(vBoisson,
+      rows.map(function (r) { return '<option value="' + r.id + '" data-prix="' + Number(r.prix || 0) + '">' + esc(r.nom) + " (" + esc(r.categorie) + ")</option>"; }).join("")
+      || '<option value="">Aucune boisson sur la carte</option>',
+      true
+    );
+  }
+
+  function renderDepenses() {
+    var rows = LB_DB.list("depenses", { sortBy: "date", dir: "desc" });
+    document.getElementById("depensesBody").innerHTML = rows.map(function (r) {
+      return "<tr><td>" + fmtDate(r.date) + "</td><td>" + esc(r.categorie) + "</td><td>" + esc(r.description || "") + "</td>" +
+        "<td>" + Number(r.montant || 0).toLocaleString("fr-FR") + " F</td>" +
+        '<td><button class="btn ghost small" data-del-depense="' + r.id + '">Supprimer</button></td></tr>';
+    }).join("") || '<tr><td colspan="5" style="color:var(--smoke)">Aucune dépense enregistrée.</td></tr>';
+    renderBarStats();
+  }
+
+  function renderVentes() {
+    var rows = LB_DB.list("ventesBoissons", { sortBy: "date", dir: "desc" });
+    document.getElementById("ventesBody").innerHTML = rows.map(function (r) {
+      return "<tr><td>" + fmtDate(r.date) + "</td><td>" + esc(r.soireeNom || "—") + "</td><td>" + esc(r.boissonNom) + "</td>" +
+        "<td>" + r.quantite + "</td><td>" + Number(r.montant || 0).toLocaleString("fr-FR") + " F</td>" +
+        '<td><button class="btn ghost small" data-del-vente="' + r.id + '">Supprimer</button></td></tr>';
+    }).join("") || '<tr><td colspan="6" style="color:var(--smoke)">Aucune vente enregistrée.</td></tr>';
+    renderBarStats();
+  }
+
+  function renderBarStats() {
+    var depenses = LB_DB.list("depenses");
+    var ventes = LB_DB.list("ventesBoissons");
+    var totalVentes = ventes.reduce(function (sum, v) { return sum + Number(v.montant || 0); }, 0);
+    var totalDepenses = depenses.reduce(function (sum, d) { return sum + Number(d.montant || 0); }, 0);
+    var stats = DEPENSE_CATEGORIES.map(function (cat) {
+      var total = depenses.filter(function (d) { return d.categorie === cat; })
+        .reduce(function (sum, d) { return sum + Number(d.montant || 0); }, 0);
+      return { num: total.toLocaleString("fr-FR") + " F", lbl: "Dépense " + cat };
+    });
+    stats.push({ num: totalVentes.toLocaleString("fr-FR") + " F", lbl: "Ventes boissons" });
+    stats.push({ num: (totalVentes - totalDepenses).toLocaleString("fr-FR") + " F", lbl: "Solde bar" });
+    document.getElementById("barStatGrid").innerHTML = stats.map(function (s) {
+      return '<div class="statCard"><div class="num">' + s.num + '</div><div class="lbl">' + s.lbl + "</div></div>";
+    }).join("");
+  }
+
+  function renderVenteSoireeOptions() {
+    var events = LB_DB.list("events", { sortBy: "date" });
+    fillSelect(document.getElementById("vSoiree"),
+      '<option value="">— Non liée à une soirée —</option>' +
+      events.map(function (e) { return '<option value="' + e.id + '">' + esc(e.nom) + " (" + fmtDate(e.date) + ")</option>"; }).join(""),
+      true
+    );
+  }
+
   function renderAll() {
     renderDashboard(); renderReservations(); renderGuestlist(); renderPrivatisations();
     renderTickets(); renderEvents(); renderClients();
+    renderBoissons(); renderDepenses(); renderVentes(); renderVenteSoireeOptions();
   }
   renderAll();
   window.addEventListener("lebaron:update", renderAll);
@@ -120,6 +191,24 @@
     var del = e.target.closest("[data-del-event]");
     if (del) {
       LB_DB.remove("events", del.dataset.delEvent);
+      renderAll();
+      return;
+    }
+    var delBoisson = e.target.closest("[data-del-boisson]");
+    if (delBoisson) {
+      LB_DB.remove("boissons", delBoisson.dataset.delBoisson);
+      renderAll();
+      return;
+    }
+    var delDepense = e.target.closest("[data-del-depense]");
+    if (delDepense) {
+      LB_DB.remove("depenses", delDepense.dataset.delDepense);
+      renderAll();
+      return;
+    }
+    var delVente = e.target.closest("[data-del-vente]");
+    if (delVente) {
+      LB_DB.remove("ventesBoissons", delVente.dataset.delVente);
       renderAll();
     }
   });
@@ -152,9 +241,65 @@
     renderAll();
   });
 
+  // valeurs par défaut : aujourd'hui pour les champs date du panneau Bar & Dépenses
+  var today = new Date().toISOString().slice(0, 10);
+  if (document.getElementById("dDate")) document.getElementById("dDate").value = today;
+  if (document.getElementById("vDate")) document.getElementById("vDate").value = today;
+
+  // ajouter une boisson / un cocktail à la carte
+  document.getElementById("boissonForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    LB_DB.add("boissons", {
+      nom: document.getElementById("bNom").value,
+      categorie: document.getElementById("bCategorie").value,
+      prix: Number(document.getElementById("bPrix").value || 0),
+    });
+    e.target.reset();
+    renderAll();
+  });
+
+  // enregistrer une dépense (boîte / bar / carré VIP / cigar hall)
+  document.getElementById("depenseForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    LB_DB.add("depenses", {
+      categorie: document.getElementById("dCategorie").value,
+      montant: Number(document.getElementById("dMontant").value || 0),
+      description: document.getElementById("dDesc").value,
+      date: document.getElementById("dDate").value,
+    });
+    e.target.reset();
+    document.getElementById("dDate").value = today;
+    renderAll();
+  });
+
+  // compte rendu boissons : enregistrer une vente/consommation
+  document.getElementById("venteForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var vBoisson = document.getElementById("vBoisson");
+    var opt = vBoisson.options[vBoisson.selectedIndex];
+    if (!opt || !opt.value) return;
+    var vSoiree = document.getElementById("vSoiree");
+    var soireeOpt = vSoiree.options[vSoiree.selectedIndex];
+    var qte = Number(document.getElementById("vQte").value || 1);
+    var prixUnitaire = Number(opt.dataset.prix || 0);
+    LB_DB.add("ventesBoissons", {
+      boissonId: opt.value,
+      boissonNom: opt.textContent,
+      quantite: qte,
+      prixUnitaire: prixUnitaire,
+      montant: prixUnitaire * qte,
+      soireeId: soireeOpt ? soireeOpt.value : "",
+      soireeNom: soireeOpt && soireeOpt.value ? soireeOpt.textContent : "",
+      date: document.getElementById("vDate").value,
+    });
+    e.target.reset();
+    document.getElementById("vDate").value = today;
+    renderAll();
+  });
+
   // reset all data
   document.getElementById("resetData").addEventListener("click", function () {
-    if (confirm("Effacer toutes les données de test (réservations, guestlist, billets, agenda, clients) ?")) {
+    if (confirm("Effacer toutes les données de test (réservations, guestlist, billets, agenda, clients, boissons, dépenses, comptes rendus) ?")) {
       LB_DB.clearAll();
       location.reload();
     }

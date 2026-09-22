@@ -20,7 +20,9 @@ puis ouvrez http://localhost:8000/index.html
   billetterie, carte, galerie, infos pratiques, contact, privatisation).
 - `admin.html` — espace gérant (tableau de bord, validation des
   réservations/guestlist, scan et validation des billets, gestion de
-  l'agenda, mini-CRM clients VIP), protégé par connexion.
+  l'agenda, mini-CRM clients VIP, carte boissons/cocktails, dépenses par
+  catégorie — Boîte, Bar, Carré VIP, Cigar Hall — et comptes rendus des
+  boissons vendues), protégé par connexion.
 - `creer-gerant.html` — à usage unique, crée le tout premier compte
   gérant (voir "Sécurité" plus bas).
 - `creer-admin.html` — permet à un gérant déjà connecté de créer d'autres
