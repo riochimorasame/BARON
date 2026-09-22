@@ -34,10 +34,10 @@ p{ margin:0; line-height:1.6; color:var(--fg-dim); }
 .rule{ height:2px; background:var(--line-soft); border:0; }
 
 /* logo */
-.brandmark{ display:flex; align-items:center; gap:9px; text-decoration:none; }
+.brandmark{ display:flex; align-items:center; gap:12px; text-decoration:none; }
 .brandmark span{ font-family:var(--font-display); font-size:1.3rem; letter-spacing:.01em; text-transform:uppercase; }
-.neon{ color:var(--ivory); }
-.logoRing{ filter:none; border-radius:50%; object-fit:cover; flex-shrink:0; }
+.neon{ color:var(--gold-bright); }
+.logoRing{ filter:none; border-radius:50%; object-fit:cover; flex-shrink:0; box-shadow:0 0 0 2px var(--ink), 0 0 0 3px var(--gold), 0 0 18px rgba(201,162,75,.45); }
 
 /* header — bande plate, contraste dur */
 header.top{ position:sticky; top:0; z-index:40; background:var(--ink); border-bottom:2px solid var(--riot); }
@@ -90,40 +90,25 @@ section.alt{ background:var(--panel); }
 .sectionHead h2{ font-size:clamp(2rem,4.4vw,3.1rem); }
 .sectionHead .lede{ max-width:36ch; }
 
-/* agenda — talons de billet */
-.agendaGrid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px; }
-.stub{
-  position:relative; background:var(--panel-2); border:2px solid var(--line-soft); padding:22px 24px; display:flex; flex-direction:column; gap:10px;
-  transition:border-color .15s, transform .15s;
+/* agenda — affiches de soirées */
+.agendaGrid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:26px; }
+.poster{
+  position:relative; background:var(--panel-2); border:2px solid var(--line-soft); overflow:hidden;
+  display:flex; flex-direction:column; transition:border-color .15s, transform .15s; aspect-ratio:3/4;
 }
-.stub:nth-child(odd){ transform:rotate(-.4deg); }
-.stub:nth-child(even){ transform:rotate(.4deg); }
-.stub:hover{ border-color:var(--riot); transform:rotate(0); }
-.stub::after{
-  content:""; position:absolute; top:0; bottom:0; left:0; width:0;
-  border-left:2px dashed var(--line-soft);
-}
-.stub .when{ font-family:var(--font-mono); font-size:.78rem; color:var(--riot); font-weight:700; text-transform:uppercase; }
-.stub h3{ font-size:1.5rem; font-weight:400; } .stub p{ font-size:.92rem; }
-.stub .tag{ align-self:flex-start; font-family:var(--font-mono); font-size:.68rem; padding:3px 10px; border:1px solid var(--line-soft); color:var(--fg-dim); margin-top:4px; text-transform:uppercase; }
-.stub .actions{ display:flex; gap:8px; margin-top:6px; }
+.poster:nth-child(odd){ transform:rotate(-.5deg); }
+.poster:nth-child(even){ transform:rotate(.5deg); }
+.poster:hover{ border-color:var(--gold-bright); transform:rotate(0) translateY(-3px); }
+.poster .posterImg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:grayscale(.15) contrast(1.08); }
+.poster .posterImg.placeholder{ background:linear-gradient(160deg, var(--surface-2), var(--ink)); }
+.poster .posterOverlay{ position:relative; margin-top:auto; padding:20px; background:linear-gradient(0deg, rgba(13,12,10,.94) 0%, rgba(13,12,10,.78) 55%, transparent 100%); }
+.poster .when{ font-family:var(--font-mono); font-size:.76rem; color:var(--gold-bright); font-weight:700; text-transform:uppercase; }
+.poster h3{ font-size:1.6rem; font-weight:400; color:var(--ivory); margin-top:4px; }
+.poster p{ font-size:.88rem; margin-top:6px; }
+.poster .tag{ align-self:flex-start; font-family:var(--font-mono); font-size:.68rem; padding:3px 10px; border:1px solid var(--gold); color:var(--gold-bright); margin-top:8px; text-transform:uppercase; }
+.poster .actions{ display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
 .emptyState{ border:2px dashed var(--line-soft); padding:44px 26px; text-align:center; color:var(--fg-dim); }
 .emptyState strong{ display:block; color:var(--fg); font-family:var(--font-display); font-size:1.6rem; margin-bottom:8px; text-transform:uppercase; }
-
-/* calendrier interactif */
-.calendarWrap{ background:var(--panel-2); border:2px solid var(--line-soft); padding:24px; }
-.calHead{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
-.calHead h3{ font-family:var(--font-display); font-size:1.3rem; font-weight:400; }
-.calGrid{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
-.calDow{ text-align:center; font-family:var(--font-mono); font-size:.68rem; color:var(--smoke); padding-bottom:4px; }
-.calDay{ aspect-ratio:1; border:1px solid transparent; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:.85rem; color:var(--fg-dim); cursor:default; }
-.calDay.has-event{ border-color:var(--riot); color:var(--fg); cursor:pointer; background:var(--riot-dim); }
-.calDay.has-event:hover{ background:color-mix(in srgb, var(--riot) 30%, transparent); }
-.calDay .d{ width:5px; height:5px; background:var(--acid); margin-top:3px; }
-.calDay.empty{ visibility:hidden; }
-.calDetail{ margin-top:16px; padding:14px 16px; background:var(--panel); border-left:3px solid var(--riot); display:none; }
-.calDetail.show{ display:block; }
-
 /* formulaires */
 .formGrid{ display:grid; grid-template-columns:1.1fr .9fr; gap:44px; align-items:start; }
 @media (max-width:860px){ .formGrid{ grid-template-columns:1fr; } }
@@ -198,8 +183,17 @@ footer{ padding:56px 0 36px; border-top:2px solid var(--riot); }
 }
 
 /* --- admin.html : écran de connexion --- */
-.authGate{ display:flex; min-height:100vh; align-items:center; justify-content:center; padding:24px; background:var(--ink); }
-.authCard{ width:100%; max-width:360px; }
+.authGate{
+  position:relative; overflow:hidden; display:flex; min-height:100vh; align-items:center; justify-content:center; padding:24px;
+  background:radial-gradient(circle at 50% 38%, rgba(201,162,75,.16), transparent 62%), var(--ink);
+}
+.authGate::before{
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:url('assets/logo.png') center 42%/620px no-repeat;
+  opacity:.16;
+}
+@media (max-width:600px){ .authGate::before{ background-size:340px; } }
+.authCard{ position:relative; z-index:1; width:100%; max-width:360px; background:color-mix(in srgb, var(--panel-2) 88%, transparent); border:2px solid var(--line-soft); padding:28px; backdrop-filter:blur(2px); }
 
 /* --- admin.html --- */
 .adminShell{ display:flex; min-height:100vh; }

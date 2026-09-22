@@ -89,9 +89,13 @@
   function renderEvents() {
     var rows = LB_DB.list("events", { sortBy: "date" });
     document.getElementById("eventsBody").innerHTML = rows.map(function (r) {
-      return "<tr><td>" + esc(r.nom) + "</td><td>" + fmtDate(r.date) + "</td><td>" + esc(r.genre || "") + "</td>" +
-        '<td><button class="btn ghost small" data-del-event="' + r.id + '">Supprimer</button></td></tr>';
-    }).join("") || '<tr><td colspan="4" style="color:var(--smoke)">Aucune soirée programmée.</td></tr>';
+      var thumb = r.affiche
+        ? '<img src="' + esc(r.affiche) + '" alt="" style="width:38px;height:50px;object-fit:cover;border:1px solid var(--line-soft)">'
+        : '<span style="color:var(--smoke)">—</span>';
+      return "<tr><td>" + thumb + "</td><td>" + esc(r.nom) + "</td><td>" + fmtDate(r.date) + "</td><td>" + esc(r.genre || "") + "</td>" +
+        '<td style="display:flex;gap:6px"><button class="btn ghost small" data-edit-event="' + r.id + '">Modifier</button>' +
+        '<button class="btn ghost small" data-del-event="' + r.id + '">Supprimer</button></td></tr>';
+    }).join("") || '<tr><td colspan="5" style="color:var(--smoke)">Aucune soirée programmée.</td></tr>';
   }
 
   function renderClients() {
@@ -191,7 +195,25 @@
     var del = e.target.closest("[data-del-event]");
     if (del) {
       LB_DB.remove("events", del.dataset.delEvent);
+      if (editingEventId === del.dataset.delEvent) exitEventEditMode();
       renderAll();
+      return;
+    }
+    var editEv = e.target.closest("[data-edit-event]");
+    if (editEv) {
+      var ev = LB_DB.get("events", editEv.dataset.editEvent);
+      if (!ev) return;
+      editingEventId = ev.id;
+      document.getElementById("eNom").value = ev.nom || "";
+      document.getElementById("eGenre").value = ev.genre || "";
+      document.getElementById("eDate").value = ev.date || "";
+      document.getElementById("eHeure").value = ev.heure || "";
+      document.getElementById("eDesc").value = ev.description || "";
+      document.getElementById("eAffiche").value = ev.affiche || "";
+      document.getElementById("eventFormTitle").textContent = "Modifier la soirée";
+      document.getElementById("eventFormSubmit").textContent = "Mettre à jour la soirée";
+      document.getElementById("eventFormCancel").style.display = "inline-flex";
+      document.getElementById("eventForm").scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
     var delBoisson = e.target.closest("[data-del-boisson]");
@@ -213,19 +235,34 @@
     }
   });
 
-  // add event
+  // add / edit event
+  var editingEventId = null;
+  function exitEventEditMode() {
+    editingEventId = null;
+    document.getElementById("eventFormTitle").textContent = "Ajouter une soirée";
+    document.getElementById("eventFormSubmit").textContent = "Publier la soirée";
+    document.getElementById("eventFormCancel").style.display = "none";
+    document.getElementById("eventForm").reset();
+  }
   document.getElementById("eventForm").addEventListener("submit", function (e) {
     e.preventDefault();
-    LB_DB.add("events", {
+    var data = {
       nom: document.getElementById("eNom").value,
       genre: document.getElementById("eGenre").value,
       date: document.getElementById("eDate").value,
       heure: document.getElementById("eHeure").value,
       description: document.getElementById("eDesc").value,
-    });
-    e.target.reset();
+      affiche: document.getElementById("eAffiche").value,
+    };
+    if (editingEventId) {
+      LB_DB.update("events", editingEventId, data);
+    } else {
+      LB_DB.add("events", data);
+    }
+    exitEventEditMode();
     renderAll();
   });
+  document.getElementById("eventFormCancel").addEventListener("click", exitEventEditMode);
 
   // add client (CRM)
   document.getElementById("clientForm").addEventListener("submit", function (e) {

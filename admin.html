@@ -15,7 +15,7 @@
 <div class="authGate" id="authGate">
   <form class="card authCard" id="loginForm" novalidate>
     <div class="brandmark" style="margin-bottom:18px;justify-content:center">
-      <img class="logoRing" src="assets/logo.png" width="34" height="34" alt="Le Baron">
+      <img class="logoRing" src="assets/logo.png" width="64" height="64" alt="Le Baron">
       <span class="neon">Le Baron</span>
     </div>
     <h2 style="font-size:1.4rem;margin-bottom:18px;text-align:center">Connexion gérant</h2>
@@ -30,7 +30,7 @@
 <div class="adminShell" id="adminShell" style="display:none">
   <aside class="adminSide">
     <div class="brandmark" style="margin-bottom:26px">
-      <img class="logoRing" src="assets/logo.png" width="30" height="30" alt="Le Baron">
+      <img class="logoRing" src="assets/logo.png" width="42" height="42" alt="Le Baron">
       <span class="neon" style="font-size:1.05rem">Le Baron</span>
     </div>
     <a href="#" class="navlink active" data-target="dashboard">Tableau de bord</a>
@@ -109,7 +109,7 @@
     <section class="panel" id="panel-agenda" style="display:none">
       <h2 style="margin-bottom:22px">Agenda des soirées</h2>
       <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter une soirée</h3>
+        <h3 id="eventFormTitle" style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter une soirée</h3>
         <form id="eventForm">
           <div class="row2">
             <div class="field"><label for="eNom">Nom de la soirée</label><input id="eNom" required></div>
@@ -120,12 +120,14 @@
             <div class="field"><label for="eHeure">Heure</label><input id="eHeure" placeholder="23h00"></div>
           </div>
           <div class="field"><label for="eDesc">Description</label><textarea id="eDesc" rows="2"></textarea></div>
-          <button class="btn" type="submit">Publier la soirée</button>
+          <div class="field"><label for="eAffiche">Affiche (URL de l'image)</label><input id="eAffiche" type="url" placeholder="https://…"></div>
+          <button class="btn" type="submit" id="eventFormSubmit">Publier la soirée</button>
+          <button class="btn ghost" type="button" id="eventFormCancel" style="display:none;margin-left:10px">Annuler la modification</button>
         </form>
       </div>
       <div class="adminPanel">
         <div class="tableWrap"><table class="dataTable">
-          <thead><tr><th>Soirée</th><th>Date</th><th>Style</th><th></th></tr></thead>
+          <thead><tr><th>Affiche</th><th>Soirée</th><th>Date</th><th>Style</th><th></th></tr></thead>
           <tbody id="eventsBody"></tbody>
         </table></div>
       </div>

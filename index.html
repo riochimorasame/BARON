@@ -16,7 +16,7 @@
 <header class="top" id="siteHeader">
   <div class="nav">
     <a href="#accueil" class="brandmark">
-      <img class="logoRing" src="assets/logo.png" width="38" height="38" alt="Le Baron">
+      <img class="logoRing" src="assets/logo.png" width="56" height="56" alt="Le Baron">
       <span class="neon">Le Baron</span>
     </a>
     <nav class="links">
@@ -28,7 +28,6 @@
         <a href="#carte">Carte</a>
         <a href="#infos">Infos</a>
         <a href="#contact">Contact</a>
-        <a href="admin.html" style="opacity:.6">Espace gérant</a>
       </div>
       <a href="#reserver" class="btn">Réserver</a>
     </nav>
@@ -62,20 +61,9 @@
     <div class="wrap">
       <div class="sectionHead">
         <h2>L'agenda</h2>
-        <p class="lede">Cliquez un jour marqué pour voir la soirée et réserver directement.</p>
+        <p class="lede">Les prochaines soirées du Baron, à réserver directement depuis leur affiche.</p>
       </div>
-      <div class="formGrid">
-        <div class="calendarWrap">
-          <div class="calHead">
-            <button class="btn ghost small" id="calPrev">←</button>
-            <h3 id="calMonthLabel"></h3>
-            <button class="btn ghost small" id="calNext">→</button>
-          </div>
-          <div class="calGrid" id="calGrid"></div>
-          <div class="calDetail" id="calDetail"></div>
-        </div>
-        <div class="agendaGrid" id="agendaGrid" style="grid-template-columns:1fr"></div>
-      </div>
+      <div class="agendaGrid" id="agendaGrid"></div>
     </div>
   </section>
 
@@ -308,8 +296,8 @@
     <div class="footGrid">
       <div>
         <div class="brandmark" style="margin-bottom:10px">
-          <img class="logoRing" src="assets/logo.png" width="30" height="30" alt="Le Baron">
-          <span style="font-family:var(--font-display);font-size:1.1rem">Le Baron</span>
+          <img class="logoRing" src="assets/logo.png" width="44" height="44" alt="Le Baron">
+          <span style="font-family:var(--font-display);font-size:1.1rem;color:var(--gold-bright)">Le Baron</span>
         </div>
         <p style="max-width:34ch">Avenue de la Libération, Lomé, Togo.</p>
       </div>
@@ -326,7 +314,6 @@
     <hr class="rule" style="margin:34px 0">
     <div class="legal">
       <span>© <span id="year"></span> Le Baron. Entrée interdite aux moins de 18 ans.</span>
-      <span>Données synchronisées en temps réel — <a href="admin.html" style="color:var(--gold-bright)">espace gérant</a> (accès protégé)</span>
     </div>
   </div>
 </footer>

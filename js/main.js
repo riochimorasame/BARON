@@ -147,7 +147,7 @@
     catch (ex) { holder.textContent = code; }
   });
 
-  // ---- agenda (liste) ----
+  // ---- agenda (affiches) ----
   function renderAgenda(events) {
     var grid = document.getElementById("agendaGrid");
     var select = document.getElementById("tSoiree");
@@ -159,11 +159,15 @@
     }
     events.sort(function (a, b) { return (a.date || "").localeCompare(b.date || ""); });
     grid.innerHTML = events.map(function (ev) {
-      return '<div class="stub"><span class="when">' + esc(fmtDate(ev.date)) + (ev.heure ? " · " + esc(ev.heure) : "") + "</span>" +
+      var img = ev.affiche
+        ? '<img class="posterImg" src="' + esc(ev.affiche) + '" alt="Affiche — ' + esc(ev.nom || "Soirée") + '">'
+        : '<div class="posterImg placeholder"></div>';
+      return '<div class="poster">' + img +
+        '<div class="posterOverlay"><span class="when">' + esc(fmtDate(ev.date)) + (ev.heure ? " · " + esc(ev.heure) : "") + "</span>" +
         "<h3>" + esc(ev.nom || "Soirée") + "</h3>" +
         "<p>" + esc(ev.description || "") + "</p>" +
         (ev.genre ? '<span class="tag">' + esc(ev.genre) + "</span>" : "") +
-        '<div class="actions"><a href="#reserver" class="btn small">Réserver</a><a href="#billets" class="btn ghost small">Acheter un pass</a></div></div>';
+        '<div class="actions"><a href="#reserver" class="btn small">Réserver</a><a href="#billets" class="btn ghost small">Acheter un pass</a></div></div></div>';
     }).join("");
     select.innerHTML = events.map(function (ev) { return "<option>" + esc(ev.nom || "Soirée") + " — " + esc(fmtDate(ev.date)) + "</option>"; }).join("");
     var next = events[0];
@@ -172,60 +176,9 @@
     document.getElementById("heroNextDate").textContent = fmtDate(next.date) + (next.heure ? " · " + next.heure : "");
   }
 
-  // ---- calendrier interactif ----
-  var calCursor = new Date();
-  calCursor.setDate(1);
-  var DOW = ["L", "M", "M", "J", "V", "S", "D"];
-
-  function eventsForMonth(events, year, month) {
-    var map = {};
-    events.forEach(function (ev) {
-      var d = new Date(ev.date + "T00:00:00");
-      if (d.getFullYear() === year && d.getMonth() === month) map[d.getDate()] = ev;
-    });
-    return map;
-  }
-
-  function renderCalendar(events) {
-    var year = calCursor.getFullYear(), month = calCursor.getMonth();
-    document.getElementById("calMonthLabel").textContent = calCursor.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
-    var grid = document.getElementById("calGrid");
-    grid.innerHTML = DOW.map(function (d) { return '<div class="calDow">' + d + "</div>"; }).join("");
-    var first = new Date(year, month, 1);
-    var startOffset = (first.getDay() + 6) % 7; // lundi = 0
-    var daysInMonth = new Date(year, month + 1, 0).getDate();
-    var evMap = eventsForMonth(events, year, month);
-    for (var i = 0; i < startOffset; i++) grid.innerHTML += '<div class="calDay empty"></div>';
-    for (var day = 1; day <= daysInMonth; day++) {
-      var hasEv = !!evMap[day];
-      grid.innerHTML += '<div class="calDay' + (hasEv ? " has-event" : "") + '" data-day="' + day + '">' + day + (hasEv ? '<span class="d"></span>' : "") + "</div>";
-    }
-    Array.prototype.forEach.call(grid.querySelectorAll(".calDay.has-event"), function (el) {
-      el.addEventListener("click", function () {
-        var ev = evMap[Number(el.dataset.day)];
-        var detail = document.getElementById("calDetail");
-        detail.innerHTML = "<strong style=\"font-family:var(--font-display);font-size:1.05rem\">" + esc(ev.nom) + "</strong>" +
-          "<p style=\"margin-top:6px\">" + esc(fmtDate(ev.date)) + (ev.heure ? " · " + esc(ev.heure) : "") + "</p>" +
-          "<p style=\"margin-top:6px\">" + esc(ev.description || "") + "</p>" +
-          '<div class="actions" style="margin-top:12px"><a href="#reserver" class="btn small">Réserver</a> <a href="#billets" class="btn ghost small">Billets</a></div>';
-        detail.classList.add("show");
-      });
-    });
-  }
-
-  document.getElementById("calPrev").addEventListener("click", function () {
-    calCursor.setMonth(calCursor.getMonth() - 1);
-    renderCalendar(LB_DB.list("events"));
-  });
-  document.getElementById("calNext").addEventListener("click", function () {
-    calCursor.setMonth(calCursor.getMonth() + 1);
-    renderCalendar(LB_DB.list("events"));
-  });
-
   function refreshAll() {
     var events = LB_DB.list("events");
     renderAgenda(events);
-    renderCalendar(events);
   }
   refreshAll();
 
