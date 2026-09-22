@@ -34,18 +34,46 @@
   var audio = document.getElementById("ambianceAudio");
   var audioBtn = document.getElementById("audioToggle");
   var audioWidget = document.getElementById("audioWidget");
-  audioBtn.addEventListener("click", function () {
+  audio.preload = "auto";
+
+  function setPlayingUI(playing) {
+    audioBtn.textContent = playing ? "❚❚" : "▶";
+    audioWidget.classList.toggle("paused", !playing);
+  }
+
+  function tryAutoplay() {
+    // Les navigateurs bloquent le son automatique tant que la personne n'a
+    // pas encore interagi avec la page — on tente quand même au chargement...
+    var p = audio.play();
+    if (p && typeof p.then === "function") {
+      p.then(function () { setPlayingUI(true); }).catch(function () {
+        // ...et sinon, on démarre au tout premier geste (clic, appui, scroll,
+        // touche) n'importe où sur la page, une seule fois.
+        var start = function () {
+          audio.play().then(function () { setPlayingUI(true); }).catch(function () {});
+          ["click", "touchstart", "keydown", "scroll"].forEach(function (evt) {
+            document.removeEventListener(evt, start);
+          });
+        };
+        ["click", "touchstart", "keydown", "scroll"].forEach(function (evt) {
+          document.addEventListener(evt, start, { once: true, passive: true });
+        });
+      });
+    }
+  }
+
+  audioBtn.addEventListener("click", function (e) {
+    e.stopPropagation();
     if (audio.paused) {
-      audio.play().catch(function () { /* fichier assets/ambiance.mp3 absent pour l'instant */ });
-      audioBtn.textContent = "❚❚";
-      audioWidget.classList.remove("paused");
+      audio.play().then(function () { setPlayingUI(true); }).catch(function () { /* fichier assets/ambiance.mp3 absent pour l'instant */ });
     } else {
       audio.pause();
-      audioBtn.textContent = "▶";
-      audioWidget.classList.add("paused");
+      setPlayingUI(false);
     }
   });
-  audioWidget.classList.add("paused");
+
+  setPlayingUI(false);
+  tryAutoplay();
 
   function genId() { return Math.random().toString(36).slice(2, 8).toUpperCase(); }
   function esc(s) { return (s || "").toString().replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }

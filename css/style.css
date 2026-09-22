@@ -127,8 +127,6 @@ section.alt{ background:var(--panel); }
 /* formulaires */
 .formGrid{ display:grid; grid-template-columns:1.1fr .9fr; gap:44px; align-items:start; }
 @media (max-width:860px){ .formGrid{ grid-template-columns:1fr; } }
-.agendaFormGrid{ grid-template-columns:1fr 1fr; }
-@media (max-width:860px){ .agendaFormGrid{ grid-template-columns:1fr; } }
 .card{ background:var(--panel); border:2px solid var(--line-soft); padding:28px; }
 .field{ margin-bottom:16px; }
 .field label{ display:block; font-family:var(--font-mono); font-size:.74rem; color:var(--fg-dim); margin-bottom:6px; text-transform:uppercase; }
@@ -207,22 +205,6 @@ footer{ padding:56px 0 36px; border-top:2px solid var(--riot); }
 .adminSide a{ display:block; padding:10px 12px; text-decoration:none; color:var(--fg-dim); font-size:.9rem; margin-bottom:4px; }
 .adminSide a.active,.adminSide a:hover{ background:var(--panel-2); color:var(--riot); }
 .adminMain{ flex:1; padding:32px 40px; max-width:1100px; }
-
-@media (max-width:860px){
-  .adminShell{ flex-direction:column; min-height:auto; }
-  .adminSide{
-    width:100%; height:auto; position:static; border-right:0; border-bottom:2px solid var(--line-soft);
-    display:flex; flex-wrap:wrap; align-items:center; gap:4px; padding:14px 16px;
-  }
-  .adminSide .brandmark{ width:100%; margin-bottom:10px !important; }
-  .adminSide hr.rule{ display:none; }
-  .adminSide a{ margin-bottom:0; padding:8px 12px; font-size:.84rem; }
-  .adminMain{ padding:24px 18px; max-width:100%; }
-}
-@media (max-width:480px){
-  .adminMain{ padding:18px 14px; }
-  .adminPanel{ padding:16px; }
-}
 .statGrid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:2px; margin-bottom:32px; background:var(--line-soft); }
 .statCard{ background:var(--panel); padding:18px; }
 .statCard .num{ font-family:var(--font-display); font-size:2rem; color:var(--acid); }
@@ -241,7 +223,31 @@ table.dataTable tr:last-child td{ border-bottom:none; }
 .tabBar button{ background:var(--panel-2); border:2px solid var(--line-soft); color:var(--fg-dim); padding:8px 16px; cursor:pointer; font-size:.8rem; font-family:var(--font-mono); text-transform:uppercase; }
 .tabBar button.active{ background:var(--riot); border-color:var(--riot); color:var(--ink); }
 .scanBox{ display:flex; gap:20px; flex-wrap:wrap; align-items:flex-start; }
-#scanVideo{ width:280px; border:2px solid var(--line-soft); background:#000; }
+#scanVideo{ width:280px; max-width:100%; border:2px solid var(--line-soft); background:#000; }
 .scanResult{ padding:14px 16px; font-size:.9rem; }
 .scanResult.ok{ background:color-mix(in srgb, var(--emerald) 25%, var(--panel-2)); border:2px solid var(--emerald); }
 .scanResult.bad{ background:color-mix(in srgb, #7A3232 25%, var(--panel-2)); border:2px solid #7A3232; }
+
+/* tableaux admin : scroll horizontal plutôt que débordement de toute la page */
+.tableWrap{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.tableWrap table{ min-width:560px; }
+
+/* --- responsive mobile : site public --- */
+@media (max-width:600px){
+  section{ padding:52px 0; }
+  .heroContent{ padding:44px 0 44px; }
+  .sectionHead{ margin-bottom:28px; padding-bottom:14px; }
+  .card{ padding:20px; }
+}
+
+/* --- responsive mobile : espace gérant --- */
+@media (max-width:860px){
+  .adminShell{ flex-direction:column; }
+  .adminSide{
+    width:100%; height:auto; position:static; border-right:0; border-bottom:2px solid var(--line-soft);
+    display:flex; overflow-x:auto; -webkit-overflow-scrolling:touch; white-space:nowrap; gap:4px; padding:12px 16px;
+  }
+  .adminSide a{ display:inline-block; flex:none; margin-bottom:0; }
+  .adminSide hr{ display:none; }
+  .adminMain{ padding:24px 16px; }
+}

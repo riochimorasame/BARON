@@ -56,30 +56,30 @@
       <div class="statGrid" id="statGrid"></div>
       <div class="adminPanel">
         <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Dernières demandes</h3>
-        <table class="dataTable" id="recentTable">
+        <div class="tableWrap"><table class="dataTable" id="recentTable">
           <thead><tr><th>Type</th><th>Nom</th><th>Date</th><th>Statut</th></tr></thead>
           <tbody></tbody>
-        </table>
+        </table></div>
       </div>
     </section>
 
     <section class="panel" id="panel-reservations" style="display:none">
       <h2 style="margin-bottom:22px">Réservations de tables</h2>
       <div class="adminPanel">
-        <table class="dataTable">
+        <div class="tableWrap"><table class="dataTable">
           <thead><tr><th>Nom</th><th>Contact</th><th>Date</th><th>Pers.</th><th>Espace</th><th>Package</th><th>Statut</th><th></th></tr></thead>
           <tbody id="reservationsBody"></tbody>
-        </table>
+        </table></div>
       </div>
     </section>
 
     <section class="panel" id="panel-guestlist" style="display:none">
       <h2 style="margin-bottom:22px">Guestlist</h2>
       <div class="adminPanel">
-        <table class="dataTable">
+        <div class="tableWrap"><table class="dataTable">
           <thead><tr><th>Nom</th><th>Contact</th><th>Date</th><th>Pers.</th><th>Statut</th><th></th></tr></thead>
           <tbody id="guestlistBody"></tbody>
-        </table>
+        </table></div>
       </div>
     </section>
 
@@ -101,10 +101,10 @@
       </div>
       <div class="adminPanel">
         <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Tous les billets</h3>
-        <table class="dataTable">
+        <div class="tableWrap"><table class="dataTable">
           <thead><tr><th>Code</th><th>Nom</th><th>Soirée</th><th>Qté</th><th>Statut</th></tr></thead>
           <tbody id="ticketsBody"></tbody>
-        </table>
+        </table></div>
       </div>
     </section>
 
@@ -126,10 +126,10 @@
         </form>
       </div>
       <div class="adminPanel">
-        <table class="dataTable">
+        <div class="tableWrap"><table class="dataTable">
           <thead><tr><th>Soirée</th><th>Date</th><th>Style</th><th></th></tr></thead>
           <tbody id="eventsBody"></tbody>
-        </table>
+        </table></div>
       </div>
     </section>
 
@@ -151,20 +151,20 @@
         </form>
       </div>
       <div class="adminPanel">
-        <table class="dataTable">
+        <div class="tableWrap"><table class="dataTable">
           <thead><tr><th>Nom</th><th>Téléphone</th><th>Anniversaire</th><th>Dépensé</th><th>Notes</th></tr></thead>
           <tbody id="clientsBody"></tbody>
-        </table>
+        </table></div>
       </div>
     </section>
 
     <section class="panel" id="panel-privatisations" style="display:none">
       <h2 style="margin-bottom:22px">Demandes de privatisation</h2>
       <div class="adminPanel">
-        <table class="dataTable">
+        <div class="tableWrap"><table class="dataTable">
           <thead><tr><th>Nom / société</th><th>Contact</th><th>Date</th><th>Pers.</th><th>Notes</th><th>Statut</th><th></th></tr></thead>
           <tbody id="privBody"></tbody>
-        </table>
+        </table></div>
       </div>
     </section>
 
