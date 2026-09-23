@@ -76,25 +76,58 @@
     </section>
 
 
+
     <section class="panel" id="panel-dept-boite" style="display:none">
       <h2 style="margin-bottom:22px">Boîte</h2>
       <div class="statGrid"><div class="statCard"><div class="num" id="ca-boite">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
+
       <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter un produit</h3>
-        <form id="form-boite">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter du stock (nouveau produit ou réapprovisionnement)</h3>
+        <form id="stock-form-boite">
           <div class="row3">
-            <div class="field"><label for="nom-boite">Nom du produit</label><input id="nom-boite" required></div>
-            <div class="field"><label for="qte-boite">Quantité</label><input id="qte-boite" type="number" min="1" value="1" required></div>
-            <div class="field"><label for="prix-boite">Prix unitaire (F CFA)</label><input id="prix-boite" type="number" min="0" required></div>
+            <div class="field"><label for="stock-nom-boite">Nom du produit</label><input id="stock-nom-boite" required></div>
+            <div class="field"><label for="stock-qte-boite">Quantité ajoutée</label><input id="stock-qte-boite" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="stock-prix-boite">Prix unitaire de vente (F CFA)</label><input id="stock-prix-boite" type="number" min="0" required></div>
           </div>
-          <button class="btn" type="submit">Ajouter</button>
+          <button class="btn" type="submit">Ajouter au stock</button>
+          <p style="font-size:.8rem;margin-top:8px;color:var(--smoke)">Si le nom correspond à un produit déjà existant dans ce département, la quantité s'ajoute à son stock (le prix est mis à jour). Sinon, un nouveau produit est créé.</p>
         </form>
       </div>
+
       <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Produits enregistrés</h3>
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Enregistrer une vente (sortie de stock)</h3>
+        <form id="vente-form-boite">
+          <div class="row3">
+            <div class="field"><label for="vente-produit-boite">Produit</label><select id="vente-produit-boite"></select></div>
+            <div class="field"><label for="vente-qte-boite">Quantité vendue</label><input id="vente-qte-boite" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="vente-date-boite">Date</label><input id="vente-date-boite" type="date" required></div>
+          </div>
+          <button class="btn" type="submit">Enregistrer la vente</button>
+        </form>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Stock actuel</h3>
         <div class="tableWrap"><table class="dataTable">
-          <thead><tr><th>Produit</th><th>Qté</th><th>Prix unit.</th><th>Total</th><th></th></tr></thead>
+          <thead><tr><th>Produit</th><th>Prix unit.</th><th>Total entré</th><th>Total vendu</th><th>Stock actuel</th><th>CA généré</th><th></th></tr></thead>
           <tbody id="body-boite"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Historique des mouvements (15 derniers)</h3>
+        <p style="font-size:.8rem;margin-bottom:10px;color:var(--smoke)">Modifiable librement pendant 10 minutes après la saisie. Passé ce délai, seul le boss peut autoriser une modification depuis son espace.</p>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Mouvement</th><th>Qté</th><th>Montant</th><th>Actions</th></tr></thead>
+          <tbody id="hist-boite"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Journal des modifications</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Action</th><th>Avant</th><th>Après</th><th>Autorisé par</th></tr></thead>
+          <tbody id="modhist-boite"></tbody>
         </table></div>
       </div>
     </section>
@@ -102,22 +135,54 @@
     <section class="panel" id="panel-dept-vip" style="display:none">
       <h2 style="margin-bottom:22px">Salle VIP</h2>
       <div class="statGrid"><div class="statCard"><div class="num" id="ca-vip">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
+
       <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter un produit</h3>
-        <form id="form-vip">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter du stock (nouveau produit ou réapprovisionnement)</h3>
+        <form id="stock-form-vip">
           <div class="row3">
-            <div class="field"><label for="nom-vip">Nom du produit</label><input id="nom-vip" required></div>
-            <div class="field"><label for="qte-vip">Quantité</label><input id="qte-vip" type="number" min="1" value="1" required></div>
-            <div class="field"><label for="prix-vip">Prix unitaire (F CFA)</label><input id="prix-vip" type="number" min="0" required></div>
+            <div class="field"><label for="stock-nom-vip">Nom du produit</label><input id="stock-nom-vip" required></div>
+            <div class="field"><label for="stock-qte-vip">Quantité ajoutée</label><input id="stock-qte-vip" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="stock-prix-vip">Prix unitaire de vente (F CFA)</label><input id="stock-prix-vip" type="number" min="0" required></div>
           </div>
-          <button class="btn" type="submit">Ajouter</button>
+          <button class="btn" type="submit">Ajouter au stock</button>
+          <p style="font-size:.8rem;margin-top:8px;color:var(--smoke)">Si le nom correspond à un produit déjà existant dans ce département, la quantité s'ajoute à son stock (le prix est mis à jour). Sinon, un nouveau produit est créé.</p>
         </form>
       </div>
+
       <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Produits enregistrés</h3>
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Enregistrer une vente (sortie de stock)</h3>
+        <form id="vente-form-vip">
+          <div class="row3">
+            <div class="field"><label for="vente-produit-vip">Produit</label><select id="vente-produit-vip"></select></div>
+            <div class="field"><label for="vente-qte-vip">Quantité vendue</label><input id="vente-qte-vip" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="vente-date-vip">Date</label><input id="vente-date-vip" type="date" required></div>
+          </div>
+          <button class="btn" type="submit">Enregistrer la vente</button>
+        </form>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Stock actuel</h3>
         <div class="tableWrap"><table class="dataTable">
-          <thead><tr><th>Produit</th><th>Qté</th><th>Prix unit.</th><th>Total</th><th></th></tr></thead>
+          <thead><tr><th>Produit</th><th>Prix unit.</th><th>Total entré</th><th>Total vendu</th><th>Stock actuel</th><th>CA généré</th><th></th></tr></thead>
           <tbody id="body-vip"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Historique des mouvements (15 derniers)</h3>
+        <p style="font-size:.8rem;margin-bottom:10px;color:var(--smoke)">Modifiable librement pendant 10 minutes après la saisie. Passé ce délai, seul le boss peut autoriser une modification depuis son espace.</p>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Mouvement</th><th>Qté</th><th>Montant</th><th>Actions</th></tr></thead>
+          <tbody id="hist-vip"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Journal des modifications</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Action</th><th>Avant</th><th>Après</th><th>Autorisé par</th></tr></thead>
+          <tbody id="modhist-vip"></tbody>
         </table></div>
       </div>
     </section>
@@ -125,22 +190,54 @@
     <section class="panel" id="panel-dept-cigare" style="display:none">
       <h2 style="margin-bottom:22px">Cigar Hall</h2>
       <div class="statGrid"><div class="statCard"><div class="num" id="ca-cigare">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
+
       <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter un produit</h3>
-        <form id="form-cigare">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter du stock (nouveau produit ou réapprovisionnement)</h3>
+        <form id="stock-form-cigare">
           <div class="row3">
-            <div class="field"><label for="nom-cigare">Nom du produit</label><input id="nom-cigare" required></div>
-            <div class="field"><label for="qte-cigare">Quantité</label><input id="qte-cigare" type="number" min="1" value="1" required></div>
-            <div class="field"><label for="prix-cigare">Prix unitaire (F CFA)</label><input id="prix-cigare" type="number" min="0" required></div>
+            <div class="field"><label for="stock-nom-cigare">Nom du produit</label><input id="stock-nom-cigare" required></div>
+            <div class="field"><label for="stock-qte-cigare">Quantité ajoutée</label><input id="stock-qte-cigare" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="stock-prix-cigare">Prix unitaire de vente (F CFA)</label><input id="stock-prix-cigare" type="number" min="0" required></div>
           </div>
-          <button class="btn" type="submit">Ajouter</button>
+          <button class="btn" type="submit">Ajouter au stock</button>
+          <p style="font-size:.8rem;margin-top:8px;color:var(--smoke)">Si le nom correspond à un produit déjà existant dans ce département, la quantité s'ajoute à son stock (le prix est mis à jour). Sinon, un nouveau produit est créé.</p>
         </form>
       </div>
+
       <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Produits enregistrés</h3>
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Enregistrer une vente (sortie de stock)</h3>
+        <form id="vente-form-cigare">
+          <div class="row3">
+            <div class="field"><label for="vente-produit-cigare">Produit</label><select id="vente-produit-cigare"></select></div>
+            <div class="field"><label for="vente-qte-cigare">Quantité vendue</label><input id="vente-qte-cigare" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="vente-date-cigare">Date</label><input id="vente-date-cigare" type="date" required></div>
+          </div>
+          <button class="btn" type="submit">Enregistrer la vente</button>
+        </form>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Stock actuel</h3>
         <div class="tableWrap"><table class="dataTable">
-          <thead><tr><th>Produit</th><th>Qté</th><th>Prix unit.</th><th>Total</th><th></th></tr></thead>
+          <thead><tr><th>Produit</th><th>Prix unit.</th><th>Total entré</th><th>Total vendu</th><th>Stock actuel</th><th>CA généré</th><th></th></tr></thead>
           <tbody id="body-cigare"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Historique des mouvements (15 derniers)</h3>
+        <p style="font-size:.8rem;margin-bottom:10px;color:var(--smoke)">Modifiable librement pendant 10 minutes après la saisie. Passé ce délai, seul le boss peut autoriser une modification depuis son espace.</p>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Mouvement</th><th>Qté</th><th>Montant</th><th>Actions</th></tr></thead>
+          <tbody id="hist-cigare"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Journal des modifications</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Action</th><th>Avant</th><th>Après</th><th>Autorisé par</th></tr></thead>
+          <tbody id="modhist-cigare"></tbody>
         </table></div>
       </div>
     </section>
@@ -148,22 +245,54 @@
     <section class="panel" id="panel-dept-bar" style="display:none">
       <h2 style="margin-bottom:22px">Bar</h2>
       <div class="statGrid"><div class="statCard"><div class="num" id="ca-bar">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
+
       <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter un produit</h3>
-        <form id="form-bar">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter du stock (nouveau produit ou réapprovisionnement)</h3>
+        <form id="stock-form-bar">
           <div class="row3">
-            <div class="field"><label for="nom-bar">Nom du produit</label><input id="nom-bar" required></div>
-            <div class="field"><label for="qte-bar">Quantité</label><input id="qte-bar" type="number" min="1" value="1" required></div>
-            <div class="field"><label for="prix-bar">Prix unitaire (F CFA)</label><input id="prix-bar" type="number" min="0" required></div>
+            <div class="field"><label for="stock-nom-bar">Nom du produit</label><input id="stock-nom-bar" required></div>
+            <div class="field"><label for="stock-qte-bar">Quantité ajoutée</label><input id="stock-qte-bar" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="stock-prix-bar">Prix unitaire de vente (F CFA)</label><input id="stock-prix-bar" type="number" min="0" required></div>
           </div>
-          <button class="btn" type="submit">Ajouter</button>
+          <button class="btn" type="submit">Ajouter au stock</button>
+          <p style="font-size:.8rem;margin-top:8px;color:var(--smoke)">Si le nom correspond à un produit déjà existant dans ce département, la quantité s'ajoute à son stock (le prix est mis à jour). Sinon, un nouveau produit est créé.</p>
         </form>
       </div>
+
       <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Produits enregistrés</h3>
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Enregistrer une vente (sortie de stock)</h3>
+        <form id="vente-form-bar">
+          <div class="row3">
+            <div class="field"><label for="vente-produit-bar">Produit</label><select id="vente-produit-bar"></select></div>
+            <div class="field"><label for="vente-qte-bar">Quantité vendue</label><input id="vente-qte-bar" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="vente-date-bar">Date</label><input id="vente-date-bar" type="date" required></div>
+          </div>
+          <button class="btn" type="submit">Enregistrer la vente</button>
+        </form>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Stock actuel</h3>
         <div class="tableWrap"><table class="dataTable">
-          <thead><tr><th>Produit</th><th>Qté</th><th>Prix unit.</th><th>Total</th><th></th></tr></thead>
+          <thead><tr><th>Produit</th><th>Prix unit.</th><th>Total entré</th><th>Total vendu</th><th>Stock actuel</th><th>CA généré</th><th></th></tr></thead>
           <tbody id="body-bar"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Historique des mouvements (15 derniers)</h3>
+        <p style="font-size:.8rem;margin-bottom:10px;color:var(--smoke)">Modifiable librement pendant 10 minutes après la saisie. Passé ce délai, seul le boss peut autoriser une modification depuis son espace.</p>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Mouvement</th><th>Qté</th><th>Montant</th><th>Actions</th></tr></thead>
+          <tbody id="hist-bar"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Journal des modifications</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Action</th><th>Avant</th><th>Après</th><th>Autorisé par</th></tr></thead>
+          <tbody id="modhist-bar"></tbody>
         </table></div>
       </div>
     </section>

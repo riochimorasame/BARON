@@ -75,7 +75,6 @@
   setPlayingUI(false);
   tryAutoplay();
 
-  function genId() { return Math.random().toString(36).slice(2, 8).toUpperCase(); }
   function esc(s) { return (s || "").toString().replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function fmtDate(iso) {
     if (!iso) return "";
@@ -84,36 +83,6 @@
     return d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
   }
 
-  function showFormResult(errEl, confEl, ok, msg) {
-    if (ok) { errEl.classList.remove("show"); confEl.classList.add("show"); }
-    else { confEl.classList.remove("show"); errEl.classList.add("show"); if (msg) errEl.textContent = msg; }
-  }
-
-  function wireSimpleForm(formId, errId, confId, collectionName, mapFn) {
-    var form = document.getElementById(formId);
-    var err = document.getElementById(errId);
-    var conf = document.getElementById(confId);
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      if (!form.checkValidity()) { showFormResult(err, conf, false); return; }
-      var data = mapFn(new FormData(form));
-      data.status = "en_attente";
-      LB_DB.add(collectionName, data);
-      showFormResult(err, conf, true);
-      form.reset();
-    });
-  }
-
-  wireSimpleForm("reservationForm", "rError", "rConfirm", "reservations", function (fd) {
-    return { nom: fd.get("nom"), tel: fd.get("tel"), email: fd.get("email"), date: fd.get("date"),
-      personnes: Number(fd.get("personnes")), carre: fd.get("carre"), package: fd.get("package"), note: fd.get("note") };
-  });
-  wireSimpleForm("guestForm", "gError", "gConfirm", "guestlist", function (fd) {
-    return { nom: fd.get("nom"), tel: fd.get("tel"), email: fd.get("email"), date: fd.get("date"), personnes: Number(fd.get("personnes")) };
-  });
-  wireSimpleForm("privForm", "pError", "pConfirm", "privatizations", function (fd) {
-    return { nom: fd.get("nom"), tel: fd.get("tel"), email: fd.get("email"), date: fd.get("date"), personnes: Number(fd.get("personnes")), note: fd.get("note") };
-  });
 
   document.getElementById("newsForm").addEventListener("submit", function (e) {
     e.preventDefault();
@@ -123,37 +92,11 @@
     e.target.reset();
   });
 
-  document.getElementById("ticketForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-    var form = e.target;
-    var err = document.getElementById("tError");
-    if (!form.checkValidity()) { err.classList.add("show"); return; }
-    err.classList.remove("show");
-    var fd = new FormData(form);
-    var code = "LB-" + genId();
-    var data = {
-      nom: fd.get("nom"), tel: fd.get("tel"), email: fd.get("email"),
-      qte: Number(fd.get("qte")), soiree: fd.get("soiree") || "Soirée à définir",
-      code: code, status: "valide",
-    };
-    LB_DB.add("tickets", data);
-
-    var panel = document.getElementById("qrPanel");
-    var holder = document.getElementById("qrHolder");
-    holder.innerHTML = "";
-    document.getElementById("qrCodeText").textContent = code;
-    panel.style.display = "flex";
-    try { new QRCode(holder, { text: code, width: 96, height: 96, colorDark: "#0B0A0D", colorLight: "#ffffff" }); }
-    catch (ex) { holder.textContent = code; }
-  });
-
   // ---- agenda (affiches) ----
   function renderAgenda(events) {
     var grid = document.getElementById("agendaGrid");
-    var select = document.getElementById("tSoiree");
     if (!events.length) {
       grid.innerHTML = '<div class="emptyState"><strong>Le programme arrive bientôt</strong>Ajoutez des soirées depuis l\'espace gérant.</div>';
-      select.innerHTML = "<option>Soirée à définir</option>";
       document.getElementById("heroNext").style.display = "none";
       return;
     }
@@ -167,9 +110,8 @@
         "<h3>" + esc(ev.nom || "Soirée") + "</h3>" +
         "<p>" + esc(ev.description || "") + "</p>" +
         (ev.genre ? '<span class="tag">' + esc(ev.genre) + "</span>" : "") +
-        '<div class="actions"><a href="#reserver" class="btn small">Réserver</a><a href="#billets" class="btn ghost small">Acheter un pass</a></div></div></div>';
+        '<div class="actions"><a href="https://wa.me/22890000000" class="btn small" target="_blank" rel="noopener">Contacter sur WhatsApp</a></div></div></div>';
     }).join("");
-    select.innerHTML = events.map(function (ev) { return "<option>" + esc(ev.nom || "Soirée") + " — " + esc(fmtDate(ev.date)) + "</option>"; }).join("");
     var next = events[0];
     document.getElementById("heroNext").style.display = "flex";
     document.getElementById("heroNextName").textContent = next.nom || "Prochaine soirée";

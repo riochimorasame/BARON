@@ -22,14 +22,11 @@
     <nav class="links">
       <div class="navScroll" id="navScroll">
         <a href="#agenda">Agenda</a>
-        <a href="#reserver">Tables &amp; VIP</a>
-        <a href="#guestlist">Guestlist</a>
-        <a href="#billets">Billets</a>
         <a href="#carte">Carte</a>
         <a href="#infos">Infos</a>
         <a href="#contact">Contact</a>
       </div>
-      <a href="#reserver" class="btn">Réserver</a>
+      <a href="https://wa.me/22890000000" class="btn" target="_blank" rel="noopener">Contacter</a>
     </nav>
     <button class="menuToggle" id="menuToggle" aria-label="Menu" aria-expanded="false">☰</button>
   </div>
@@ -45,9 +42,9 @@
     <div class="heroStamp">Ouverture<br>bientôt</div>
     <div class="heroContent wrap">
       <h1>LOMÉ<br>A UN<br>NOUVEAU<br>BARON.</h1>
-      <p class="lede">Afrobeat, amapiano, hip-hop, électro — une identité différente chaque semaine, sous un même toit. Entrez dans la guestlist d'ouverture avant tout le monde.</p>
+      <p class="lede">Afrobeat, amapiano, hip-hop, électro — une identité différente chaque semaine, sous un même toit.</p>
       <div class="ctas">
-        <a href="#guestlist" class="btn">Rejoindre la guestlist</a>
+        <a href="https://wa.me/22890000000" class="btn" target="_blank" rel="noopener">Contacter sur WhatsApp</a>
         <a href="#agenda" class="btn ghost">Voir le programme</a>
       </div>
       <div class="heroNext" id="heroNext" style="display:none">
@@ -64,122 +61,6 @@
         <p class="lede">Les prochaines soirées du Baron, à réserver directement depuis leur affiche.</p>
       </div>
       <div class="agendaGrid" id="agendaGrid"></div>
-    </div>
-  </section>
-
-  <section class="alt" id="reserver">
-    <div class="wrap">
-      <div class="sectionHead">
-        <h2>Tables &amp; carrés VIP</h2>
-        <p class="lede">Sélectionnez la date, l'espace et le package — l'équipe confirme sous 24h.</p>
-      </div>
-      <div class="formGrid">
-        <form class="card" id="reservationForm" novalidate>
-          <div class="row2">
-            <div class="field"><label for="rNom">Nom complet</label><input id="rNom" name="nom" required></div>
-            <div class="field"><label for="rTel">Téléphone</label><input id="rTel" name="tel" type="tel" required></div>
-          </div>
-          <div class="field"><label for="rEmail">E-mail</label><input id="rEmail" name="email" type="email" required></div>
-          <div class="row2">
-            <div class="field"><label for="rDate">Date de la soirée</label><input id="rDate" name="date" type="date" required></div>
-            <div class="field"><label for="rPersonnes">Nombre de personnes</label><input id="rPersonnes" name="personnes" type="number" min="1" max="30" value="4" required></div>
-          </div>
-          <div class="row2">
-            <div class="field">
-              <label for="rCarre">Espace</label>
-              <select id="rCarre" name="carre">
-                <option>Table Bar</option>
-                <option>Carré VIP</option>
-                <option>Cigar Hall (VIP)</option>
-                <option>Espace Prestige</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="rPackage">Package bouteilles</label>
-              <select id="rPackage" name="package">
-                <option>À définir avec l'hôtesse</option>
-                <option>Spiritueux standard</option>
-                <option>Spiritueux premium</option>
-                <option>Champagne</option>
-              </select>
-            </div>
-          </div>
-          <div class="field"><label for="rNote">Message (optionnel)</label><textarea id="rNote" name="note" rows="3" placeholder="Anniversaire, occasion particulière, demande spécifique…"></textarea></div>
-          <button class="btn block" type="submit">Envoyer la demande de réservation</button>
-          <p class="errorMsg" id="rError">Merci de renseigner tous les champs requis.</p>
-          <div class="confirm" id="rConfirm">Demande envoyée — confirmation par téléphone ou e-mail sous 24h.</div>
-        </form>
-        <div class="noteBox">
-          <strong>Comment ça marche ?</strong>
-          <p style="margin-top:8px">Votre demande part directement à l'équipe de réservation. Rien n'est débité maintenant — un hôte du Baron revient vers vous pour confirmer disponibilité, tarif et modalités de paiement.</p>
-          <p style="margin-top:14px">Besoin d'une réponse rapide ? <a href="#contact" style="color:var(--gold-bright)">Écrivez sur WhatsApp</a>.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="guestlist">
-    <div class="wrap">
-      <div class="sectionHead">
-        <h2>Guestlist — spécial lancement</h2>
-        <p class="lede">Tentez un accès exclusif et coupe-file pour la soirée d'inauguration.</p>
-      </div>
-      <div class="formGrid">
-        <form class="card" id="guestForm" novalidate>
-          <div class="row2">
-            <div class="field"><label for="gNom">Nom complet</label><input id="gNom" name="nom" required></div>
-            <div class="field"><label for="gTel">Téléphone</label><input id="gTel" name="tel" type="tel" required></div>
-          </div>
-          <div class="row2">
-            <div class="field"><label for="gDate">Date souhaitée</label><input id="gDate" name="date" type="date" required></div>
-            <div class="field"><label for="gPersonnes">Nombre de personnes</label><input id="gPersonnes" name="personnes" type="number" min="1" max="10" value="2" required></div>
-          </div>
-          <div class="field"><label for="gEmail">E-mail</label><input id="gEmail" name="email" type="email" required></div>
-          <button class="btn block" type="submit">Demander l'accès</button>
-          <p class="errorMsg" id="gError">Merci de renseigner tous les champs requis.</p>
-          <div class="confirm" id="gConfirm">Demande envoyée — votre nom sera examiné par l'équipe.</div>
-        </form>
-        <div class="noteBox">
-          <strong>À savoir</strong>
-          <p style="margin-top:8px">La guestlist est limitée et validée au cas par cas. Une place en liste ne garantit pas l'entrée en cas d'affluence exceptionnelle.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="alt" id="billets">
-    <div class="wrap">
-      <div class="sectionHead">
-        <h2>Billetterie</h2>
-        <p class="lede">Pour les soirées à entrée payante, achetez votre billet et présentez le QR code à l'entrée.</p>
-      </div>
-      <div class="formGrid">
-        <form class="card" id="ticketForm" novalidate>
-          <div class="field"><label for="tSoiree">Soirée</label><select id="tSoiree" name="soiree"></select></div>
-          <div class="row2">
-            <div class="field"><label for="tNom">Nom complet</label><input id="tNom" name="nom" required></div>
-            <div class="field"><label for="tTel">Téléphone</label><input id="tTel" name="tel" type="tel" required></div>
-          </div>
-          <div class="row2">
-            <div class="field"><label for="tEmail">E-mail</label><input id="tEmail" name="email" type="email" required></div>
-            <div class="field"><label for="tQte">Nombre de billets</label><input id="tQte" name="qte" type="number" min="1" max="10" value="1" required></div>
-          </div>
-          <button class="btn block" type="submit">Générer mon billet</button>
-          <p class="errorMsg" id="tError">Merci de renseigner tous les champs requis.</p>
-          <div class="qrPanel" id="qrPanel" style="display:none">
-            <div id="qrHolder"></div>
-            <div>
-              <div style="font-size:.8rem;color:var(--fg-dim)">Code de votre billet</div>
-              <div class="qrCode-text" id="qrCodeText"></div>
-              <p style="font-size:.82rem;margin-top:6px">Capture d'écran conseillée — ce code sera scanné à l'entrée.</p>
-            </div>
-          </div>
-        </form>
-        <div class="noteBox">
-          <strong>Paiement</strong>
-          <p style="margin-top:8px">Le billet est pré-généré avec un code unique ; le paiement en ligne (Mobile Money, carte) sera branché à l'étape Firebase.</p>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -260,35 +141,6 @@
     </div>
   </section>
 
-  <section id="privatisation">
-    <div class="wrap">
-      <div class="sectionHead">
-        <h2>Privatiser le club</h2>
-        <p class="lede">Entreprise, anniversaire, lancement — le Baron peut être privatisé en semaine ou en soirée dédiée.</p>
-      </div>
-      <div class="formGrid">
-        <form class="card" id="privForm" novalidate>
-          <div class="row2">
-            <div class="field"><label for="pNom">Nom / société</label><input id="pNom" name="nom" required></div>
-            <div class="field"><label for="pTel">Téléphone</label><input id="pTel" name="tel" type="tel" required></div>
-          </div>
-          <div class="row2">
-            <div class="field"><label for="pDate">Date envisagée</label><input id="pDate" name="date" type="date" required></div>
-            <div class="field"><label for="pPersonnes">Nombre de personnes estimé</label><input id="pPersonnes" name="personnes" type="number" min="10" max="500" value="50" required></div>
-          </div>
-          <div class="field"><label for="pEmail">E-mail</label><input id="pEmail" name="email" type="email" required></div>
-          <div class="field"><label for="pNote">Détails</label><textarea id="pNote" name="note" rows="3" placeholder="Type d'événement, budget approximatif, besoins particuliers…"></textarea></div>
-          <button class="btn block" type="submit">Envoyer la demande</button>
-          <p class="errorMsg" id="pError">Merci de renseigner tous les champs requis.</p>
-          <div class="confirm" id="pConfirm">Demande transmise — l'équipe événementiel vous recontacte sous peu.</div>
-        </form>
-        <div class="noteBox">
-          <strong>Ce qui est inclus</strong>
-          <p style="margin-top:8px">Espace exclusif, régie son et lumière, sécurité dédiée, DJ résident sur mesure.</p>
-        </div>
-      </div>
-    </div>
-  </section>
 </main>
 
 <footer>
@@ -329,7 +181,6 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="js/data.js"></script>
 <script src="js/main.js"></script>
 </body>

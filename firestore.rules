@@ -14,10 +14,11 @@ rules_version = '2';
 //    catégorie : boîte, bar, carré VIP, cigar hall) et "ventesBoissons"
 //    (comptes rendus boissons vendues) : entièrement réservés aux comptes
 //    gérants, comme "clients" — jamais touchés par le site public.
-//  - "produits" (stock/CA par département : Boîte, Salle VIP, Cigar Hall,
-//    Bar) : entièrement réservé aux comptes gérants — c'est ce que le
-//    gérant saisit depuis admin.html et que le boss consulte depuis
-//    boss.html (avec les mêmes identifiants gérant).
+//  - "produits" (fiches produit par département : Boîte, Salle VIP, Cigar
+//    Hall, Bar) et "mouvements" (historique des entrées de stock et des
+//    ventes, avec quantité et montant) : entièrement réservés aux comptes
+//    gérants — c'est ce que le gérant saisit depuis admin.html et que le
+//    boss consulte depuis boss.html (avec les mêmes identifiants gérant).
 //  - "reservations", "guestlist", "tickets", "privatizations",
 //    "newsletter" : n'importe qui peut CRÉER un document (c'est ce que
 //    font les formulaires du site public), mais seule une session gérant
@@ -63,6 +64,14 @@ service cloud.firestore {
     }
 
     match /produits/{produitId} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /mouvements/{mouvementId} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /historique_modifications/{modId} {
       allow read, write: if request.auth != null;
     }
 

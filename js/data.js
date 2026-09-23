@@ -39,7 +39,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 const LB_DB = (function () {
-  const COLLECTIONS = ["events", "reservations", "guestlist", "tickets", "privatizations", "newsletter", "clients", "boissons", "depenses", "ventesBoissons", "produits"];
+  const COLLECTIONS = ["events", "reservations", "guestlist", "tickets", "privatizations", "newsletter", "clients", "boissons", "depenses", "ventesBoissons", "produits", "mouvements", "historique_modifications"];
   const cache = {};   // col -> array (rempli en direct par Firestore)
   const watching = {}; // col -> true une fois l'écoute temps réel lancée
 
@@ -94,10 +94,9 @@ const LB_DB = (function () {
     // sur des collections que les règles Firestore lui interdisent de lire).
     add(col, data) {
       const doc = Object.assign({ createdAt: Date.now() }, data);
-      db.collection(col).add(doc).catch(function (err) {
+      return db.collection(col).add(doc).catch(function (err) {
         console.error("[LB_DB] add('" + col + "') a échoué", err);
       });
-      return doc;
     },
     list(col, opts) {
       watch(col);

@@ -16,21 +16,37 @@ puis ouvrez http://localhost:8000/index.html
 
 ## Pages
 
-- `index.html` — site public (accueil, agenda, réservations, guestlist,
-  billetterie, carte, galerie, infos pratiques, contact, privatisation).
-  Les formulaires publics continuent d'envoyer leurs demandes dans
-  Firestore comme avant, même si `admin.html` ne les affiche plus (voir
-  ci-dessous) — pensez-y si vous souhaitez un jour les relire.
+- `index.html` — site public (accueil, agenda, carte, galerie, infos
+  pratiques, contact, newsletter). Les anciens formulaires de
+  réservation, guestlist, billetterie et privatisation ont été retirés
+  pour le moment (le contact se fait par WhatsApp) — à réintroduire plus
+  tard si besoin, une fois qu'un endroit les gérera côté admin.
 - `admin.html` — espace gérant, protégé par connexion : gestion de
-  l'**agenda** des soirées, et suivi produits/stock/chiffre d'affaires de
-  **4 départements** (Boîte, Salle VIP, Cigar Hall, Bar) — chacun avec un
-  formulaire "Ajouter un produit" (nom, quantité, prix) et son propre
-  chiffre d'affaires calculé automatiquement — plus les Paramètres du
-  compte.
-- `boss.html` — vue du boss : mêmes identifiants gérant, mais en
-  **lecture seule**. Affiche en temps réel tout ce que le gérant saisit
-  dans les 4 départements (produits, stock, chiffre d'affaires par
-  département et total), consultable depuis n'importe où.
+  l'**agenda** des soirées, et suivi de stock détaillé pour **4
+  départements** (Boîte, Salle VIP, Cigar Hall, Bar). Pour chaque
+  département : un formulaire **"Ajouter du stock"** (crée le produit ou
+  réapprovisionne un produit existant du même nom), un formulaire
+  **"Enregistrer une vente"** (sortie de stock, avec vérification que la
+  quantité vendue ne dépasse pas le stock disponible), un tableau
+  **stock actuel** (total entré, total vendu, stock restant, chiffre
+  d'affaires par produit) et un **historique des mouvements** — plus les
+  Paramètres du compte. Rien n'est jamais écrasé : chaque entrée et
+  chaque vente reste tracée individuellement, le stock et le chiffre
+  d'affaires sont recalculés automatiquement à partir de cet historique.
+  Le gérant peut librement modifier ou supprimer un mouvement dans les
+  **10 minutes** suivant sa saisie ; passé ce délai, il lui faut une
+  autorisation du boss (accordée depuis `boss.html`) pour agir une fois
+  de plus sur ce mouvement précis. Chaque modification ou suppression —
+  qu'elle soit faite dans le délai ou après autorisation — est
+  enregistrée dans le **journal des modifications** (avant/après, qui l'a
+  autorisée).
+- `boss.html` — vue du boss : mêmes identifiants gérant. Affiche en
+  temps réel, pour chaque département, le stock actuel, le chiffre
+  d'affaires, l'historique complet des mouvements et le journal des
+  modifications. Sur un mouvement verrouillé (saisi il y a plus de 10
+  minutes), un bouton **"Autoriser une modification"** permet au boss de
+  débloquer une correction ponctuelle, que le gérant effectuera ensuite
+  depuis `admin.html`.
 - `compte-gerant.html` — page unique pour la gestion des comptes gérant
   (remplace les anciennes `creer-gerant.html`, `creer-admin.html` et
   `ajouter-admin.html`) : crée le tout premier compte si aucun n'existe

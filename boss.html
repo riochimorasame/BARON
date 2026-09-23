@@ -55,13 +55,31 @@
       </div>
     </section>
 
+
     <section class="panel" id="panel-dept-boite" style="display:none">
       <h2 style="margin-bottom:22px">Boîte</h2>
       <div class="statGrid"><div class="statCard"><div class="num" id="ca-boite">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
       <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Stock actuel</h3>
         <div class="tableWrap"><table class="dataTable">
-          <thead><tr><th>Produit</th><th>Qté</th><th>Prix unit.</th><th>Total</th></tr></thead>
+          <thead><tr><th>Produit</th><th>Prix unit.</th><th>Total entré</th><th>Total vendu</th><th>Stock actuel</th><th>CA généré</th></tr></thead>
           <tbody id="body-boite"></tbody>
+        </table></div>
+      </div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Historique des mouvements (tout saisi par le gérant)</h3>
+        <p style="font-size:.8rem;margin-bottom:10px;color:var(--smoke)">Le gérant peut modifier librement dans les 10 minutes suivant sa saisie. Passé ce délai, vous pouvez l'autoriser à modifier un mouvement précis ci-dessous.</p>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Mouvement</th><th>Qté</th><th>Montant</th><th>Statut</th></tr></thead>
+          <tbody id="hist-boite"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Journal des modifications</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Action</th><th>Avant</th><th>Après</th><th>Autorisé par</th></tr></thead>
+          <tbody id="modhist-boite"></tbody>
         </table></div>
       </div>
     </section>
@@ -70,9 +88,26 @@
       <h2 style="margin-bottom:22px">Salle VIP</h2>
       <div class="statGrid"><div class="statCard"><div class="num" id="ca-vip">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
       <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Stock actuel</h3>
         <div class="tableWrap"><table class="dataTable">
-          <thead><tr><th>Produit</th><th>Qté</th><th>Prix unit.</th><th>Total</th></tr></thead>
+          <thead><tr><th>Produit</th><th>Prix unit.</th><th>Total entré</th><th>Total vendu</th><th>Stock actuel</th><th>CA généré</th></tr></thead>
           <tbody id="body-vip"></tbody>
+        </table></div>
+      </div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Historique des mouvements (tout saisi par le gérant)</h3>
+        <p style="font-size:.8rem;margin-bottom:10px;color:var(--smoke)">Le gérant peut modifier librement dans les 10 minutes suivant sa saisie. Passé ce délai, vous pouvez l'autoriser à modifier un mouvement précis ci-dessous.</p>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Mouvement</th><th>Qté</th><th>Montant</th><th>Statut</th></tr></thead>
+          <tbody id="hist-vip"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Journal des modifications</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Action</th><th>Avant</th><th>Après</th><th>Autorisé par</th></tr></thead>
+          <tbody id="modhist-vip"></tbody>
         </table></div>
       </div>
     </section>
@@ -81,9 +116,26 @@
       <h2 style="margin-bottom:22px">Cigar Hall</h2>
       <div class="statGrid"><div class="statCard"><div class="num" id="ca-cigare">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
       <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Stock actuel</h3>
         <div class="tableWrap"><table class="dataTable">
-          <thead><tr><th>Produit</th><th>Qté</th><th>Prix unit.</th><th>Total</th></tr></thead>
+          <thead><tr><th>Produit</th><th>Prix unit.</th><th>Total entré</th><th>Total vendu</th><th>Stock actuel</th><th>CA généré</th></tr></thead>
           <tbody id="body-cigare"></tbody>
+        </table></div>
+      </div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Historique des mouvements (tout saisi par le gérant)</h3>
+        <p style="font-size:.8rem;margin-bottom:10px;color:var(--smoke)">Le gérant peut modifier librement dans les 10 minutes suivant sa saisie. Passé ce délai, vous pouvez l'autoriser à modifier un mouvement précis ci-dessous.</p>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Mouvement</th><th>Qté</th><th>Montant</th><th>Statut</th></tr></thead>
+          <tbody id="hist-cigare"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Journal des modifications</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Action</th><th>Avant</th><th>Après</th><th>Autorisé par</th></tr></thead>
+          <tbody id="modhist-cigare"></tbody>
         </table></div>
       </div>
     </section>
@@ -92,9 +144,26 @@
       <h2 style="margin-bottom:22px">Bar</h2>
       <div class="statGrid"><div class="statCard"><div class="num" id="ca-bar">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
       <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Stock actuel</h3>
         <div class="tableWrap"><table class="dataTable">
-          <thead><tr><th>Produit</th><th>Qté</th><th>Prix unit.</th><th>Total</th></tr></thead>
+          <thead><tr><th>Produit</th><th>Prix unit.</th><th>Total entré</th><th>Total vendu</th><th>Stock actuel</th><th>CA généré</th></tr></thead>
           <tbody id="body-bar"></tbody>
+        </table></div>
+      </div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Historique des mouvements (tout saisi par le gérant)</h3>
+        <p style="font-size:.8rem;margin-bottom:10px;color:var(--smoke)">Le gérant peut modifier librement dans les 10 minutes suivant sa saisie. Passé ce délai, vous pouvez l'autoriser à modifier un mouvement précis ci-dessous.</p>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Mouvement</th><th>Qté</th><th>Montant</th><th>Statut</th></tr></thead>
+          <tbody id="hist-bar"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Journal des modifications</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Action</th><th>Avant</th><th>Après</th><th>Autorisé par</th></tr></thead>
+          <tbody id="modhist-bar"></tbody>
         </table></div>
       </div>
     </section>
