@@ -18,19 +18,24 @@ puis ouvrez http://localhost:8000/index.html
 
 - `index.html` — site public (accueil, agenda, réservations, guestlist,
   billetterie, carte, galerie, infos pratiques, contact, privatisation).
-- `admin.html` — espace gérant (tableau de bord, validation des
-  réservations/guestlist, scan et validation des billets, gestion de
-  l'agenda, mini-CRM clients VIP, carte boissons/cocktails, dépenses par
-  catégorie — Boîte, Bar, Carré VIP, Cigar Hall — et comptes rendus des
-  boissons vendues), protégé par connexion.
-- `creer-gerant.html` — à usage unique, crée le tout premier compte
-  gérant (voir "Sécurité" plus bas).
-- `creer-admin.html` — permet à un gérant déjà connecté de créer d'autres
-  comptes gérant.
-- `ajouter-admin.html` — crée des comptes gérant **sans connexion
-  requise et réutilisable** (pas de verrou). À supprimer du dossier
-  vous-même une fois les comptes créés — voir l'avertissement affiché sur
-  la page.
+  Les formulaires publics continuent d'envoyer leurs demandes dans
+  Firestore comme avant, même si `admin.html` ne les affiche plus (voir
+  ci-dessous) — pensez-y si vous souhaitez un jour les relire.
+- `admin.html` — espace gérant, protégé par connexion : gestion de
+  l'**agenda** des soirées, et suivi produits/stock/chiffre d'affaires de
+  **4 départements** (Boîte, Salle VIP, Cigar Hall, Bar) — chacun avec un
+  formulaire "Ajouter un produit" (nom, quantité, prix) et son propre
+  chiffre d'affaires calculé automatiquement — plus les Paramètres du
+  compte.
+- `boss.html` — vue du boss : mêmes identifiants gérant, mais en
+  **lecture seule**. Affiche en temps réel tout ce que le gérant saisit
+  dans les 4 départements (produits, stock, chiffre d'affaires par
+  département et total), consultable depuis n'importe où.
+- `compte-gerant.html` — page unique pour la gestion des comptes gérant
+  (remplace les anciennes `creer-gerant.html`, `creer-admin.html` et
+  `ajouter-admin.html`) : crée le tout premier compte si aucun n'existe
+  encore, sinon demande de se connecter avec un compte gérant existant
+  avant d'en créer un nouveau (plus d'accès libre et réutilisable).
 
 ## Où sont stockées les données ?
 
@@ -76,28 +81,32 @@ console.firebase.google.com → votre projet → **Authentication** → onglet
 **Sign-in method** → activez **E-mail/Mot de passe**. Sans ça, les deux
 pages ci-dessous ne pourront créer aucun compte.
 
-**3. Créer le tout premier compte gérant : `creer-gerant.html`.**
-C'est une page **à usage unique**, avec un e-mail et un mot de passe
-pré-remplis par défaut (`admin@lebaron.com` / `LeBaron123`, modifiables
-dans `js/creer-gerant.js` ou directement dans le formulaire) — un clic
-sur "Créer" suffit. Le verrou est posé côté Firestore (document
-`_setup/adminCreated`, voir `firestore.rules`) : une fois utilisée, la
-page se désactive d'elle-même pour toujours, même si quelqu'un retombe
-dessus plus tard ou vide son cache.
+**3. Créer le tout premier compte gérant : `compte-gerant.html`.**
+Tant qu'aucun compte gérant n'existe, cette page affiche un formulaire
+avec un e-mail et un mot de passe pré-remplis par défaut
+(`admin@lebaron.com` / `LeBaron123`, modifiables dans
+`js/compte-gerant.js` ou directement dans le formulaire) — un clic sur
+"Créer" suffit. Le verrou est posé côté Firestore (document
+`_setup/adminCreated`, voir `firestore.rules`) : une fois un premier
+compte créé, cette même page ne proposera plus jamais d'en créer un sans
+connexion — il faudra être connecté (voir point 4).
 
 **4. Changer le mot de passe par défaut, ou en créer d'autres.**
 Une fois connecté sur `admin.html`, allez dans **Paramètres → Mon
 compte** pour changer votre mot de passe ou supprimer ce compte
 (assurez-vous qu'un autre compte existe avant de supprimer celui-ci, sinon
 vous perdez l'accès). Pour ajouter des collègues, **Paramètres → Comptes
-gérant → Créer un accès gérant** (ou `creer-admin.html` directement).
+gérant → Créer un accès gérant** (ou `compte-gerant.html` directement,
+en étant connecté) : ce sont les mêmes identifiants qui donnent accès à
+`boss.html`, la vue lecture seule du boss.
 
 Ce sont ces identifiants qui sont utilisés sur l'écran de connexion de
-`admin.html`. Note : ni `creer-admin.html` ni `creer-gerant.html` ne
-bloquent la création de compte au niveau du projet Firebase lui-même
-(au-delà de leurs propres verrous) — une protection complète
-nécessiterait un contrôle côté serveur (Cloud Function), à mettre en
-place avant l'ouverture réelle si vous le souhaitez.
+`admin.html` et de `boss.html`. Note : `compte-gerant.html` ne bloque
+pas la création de compte au niveau du projet Firebase lui-même
+(au-delà de son propre verrou et de l'exigence de connexion pour les
+comptes suivants) — une protection complète nécessiterait un contrôle
+côté serveur (Cloud Function), à mettre en place avant l'ouverture
+réelle si vous le souhaitez.
 
 Sans l'étape 1, l'écran de connexion protège l'affichage mais pas les
 données elles-mêmes (n'importe qui pourrait encore lire/écrire dans

@@ -33,15 +33,14 @@
       <img class="logoRing" src="assets/logo.png" width="42" height="42" alt="Le Baron">
       <span class="neon" style="font-size:1.05rem">Le Baron</span>
     </div>
-    <a href="#" class="navlink active" data-target="dashboard">Tableau de bord</a>
-    <a href="#" class="navlink" data-target="reservations">Réservations</a>
-    <a href="#" class="navlink" data-target="guestlist">Guestlist</a>
-    <a href="#" class="navlink" data-target="billets">Billetterie &amp; scan</a>
-    <a href="#" class="navlink" data-target="agenda">Agenda</a>
-    <a href="#" class="navlink" data-target="crm">CRM Clients VIP</a>
-    <a href="#" class="navlink" data-target="bar">Bar &amp; Dépenses</a>
-    <a href="#" class="navlink" data-target="privatisations">Privatisations</a>
+    <a href="#" class="navlink active" data-target="agenda">Agenda</a>
+    <a href="#" class="navlink" data-target="dept-boite">Boîte</a>
+    <a href="#" class="navlink" data-target="dept-vip">Salle VIP</a>
+    <a href="#" class="navlink" data-target="dept-cigare">Cigar Hall</a>
+    <a href="#" class="navlink" data-target="dept-bar">Bar</a>
     <a href="#" class="navlink" data-target="parametres">Paramètres</a>
+    <hr class="rule" style="margin:18px 0">
+    <a href="boss.html">Vue du boss (lecture seule)</a>
     <hr class="rule" style="margin:18px 0">
     <a href="index.html">← Retour au site public</a>
     <a href="#" id="logoutBtn" style="color:var(--riot)">Se déconnecter</a>
@@ -49,64 +48,7 @@
 
   <main class="adminMain">
 
-    <section class="panel" id="panel-dashboard">
-      <h2 style="margin-bottom:22px">Tableau de bord</h2>
-      <div class="statGrid" id="statGrid"></div>
-      <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Dernières demandes</h3>
-        <div class="tableWrap"><table class="dataTable" id="recentTable">
-          <thead><tr><th>Type</th><th>Nom</th><th>Date</th><th>Statut</th></tr></thead>
-          <tbody></tbody>
-        </table></div>
-      </div>
-    </section>
-
-    <section class="panel" id="panel-reservations" style="display:none">
-      <h2 style="margin-bottom:22px">Réservations de tables</h2>
-      <div class="adminPanel">
-        <div class="tableWrap"><table class="dataTable">
-          <thead><tr><th>Nom</th><th>Contact</th><th>Date</th><th>Pers.</th><th>Espace</th><th>Package</th><th>Statut</th><th></th></tr></thead>
-          <tbody id="reservationsBody"></tbody>
-        </table></div>
-      </div>
-    </section>
-
-    <section class="panel" id="panel-guestlist" style="display:none">
-      <h2 style="margin-bottom:22px">Guestlist</h2>
-      <div class="adminPanel">
-        <div class="tableWrap"><table class="dataTable">
-          <thead><tr><th>Nom</th><th>Contact</th><th>Date</th><th>Pers.</th><th>Statut</th><th></th></tr></thead>
-          <tbody id="guestlistBody"></tbody>
-        </table></div>
-      </div>
-    </section>
-
-    <section class="panel" id="panel-billets" style="display:none">
-      <h2 style="margin-bottom:22px">Billetterie &amp; contrôle d'accès</h2>
-      <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Valider un billet</h3>
-        <div class="scanBox">
-          <div>
-            <video id="scanVideo" autoplay muted playsinline></video>
-            <div style="margin-top:8px"><button class="btn ghost small" id="scanStart">Activer la caméra</button> <button class="btn ghost small" id="scanStop" style="display:none">Arrêter</button></div>
-          </div>
-          <div style="flex:1;min-width:220px">
-            <div class="field"><label for="manualCode">Ou saisir le code manuellement</label><input id="manualCode" placeholder="LB-XXXXXX"></div>
-            <button class="btn" id="manualCheck">Vérifier</button>
-            <div id="scanResult" style="margin-top:14px"></div>
-          </div>
-        </div>
-      </div>
-      <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Tous les billets</h3>
-        <div class="tableWrap"><table class="dataTable">
-          <thead><tr><th>Code</th><th>Nom</th><th>Soirée</th><th>Qté</th><th>Statut</th></tr></thead>
-          <tbody id="ticketsBody"></tbody>
-        </table></div>
-      </div>
-    </section>
-
-    <section class="panel" id="panel-agenda" style="display:none">
+    <section class="panel" id="panel-agenda">
       <h2 style="margin-bottom:22px">Agenda des soirées</h2>
       <div class="adminPanel">
         <h3 id="eventFormTitle" style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter une soirée</h3>
@@ -133,115 +75,95 @@
       </div>
     </section>
 
-    <section class="panel" id="panel-crm" style="display:none">
-      <h2 style="margin-bottom:22px">CRM — Clients VIP</h2>
+
+    <section class="panel" id="panel-dept-boite" style="display:none">
+      <h2 style="margin-bottom:22px">Boîte</h2>
+      <div class="statGrid"><div class="statCard"><div class="num" id="ca-boite">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
       <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter un client</h3>
-        <form id="clientForm">
-          <div class="row2">
-            <div class="field"><label for="cNom">Nom</label><input id="cNom" required></div>
-            <div class="field"><label for="cTel">Téléphone</label><input id="cTel"></div>
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter un produit</h3>
+        <form id="form-boite">
+          <div class="row3">
+            <div class="field"><label for="nom-boite">Nom du produit</label><input id="nom-boite" required></div>
+            <div class="field"><label for="qte-boite">Quantité</label><input id="qte-boite" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="prix-boite">Prix unitaire (F CFA)</label><input id="prix-boite" type="number" min="0" required></div>
           </div>
-          <div class="row2">
-            <div class="field"><label for="cAnniv">Anniversaire</label><input id="cAnniv" type="date"></div>
-            <div class="field"><label for="cDepense">Total dépensé (F CFA)</label><input id="cDepense" type="number" min="0" value="0"></div>
-          </div>
-          <div class="field"><label for="cNote">Notes (préférences, historique de venues…)</label><textarea id="cNote" rows="2"></textarea></div>
-          <button class="btn" type="submit">Ajouter au CRM</button>
+          <button class="btn" type="submit">Ajouter</button>
         </form>
       </div>
       <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Produits enregistrés</h3>
         <div class="tableWrap"><table class="dataTable">
-          <thead><tr><th>Nom</th><th>Téléphone</th><th>Anniversaire</th><th>Dépensé</th><th>Notes</th></tr></thead>
-          <tbody id="clientsBody"></tbody>
+          <thead><tr><th>Produit</th><th>Qté</th><th>Prix unit.</th><th>Total</th><th></th></tr></thead>
+          <tbody id="body-boite"></tbody>
         </table></div>
       </div>
     </section>
 
-    <section class="panel" id="panel-bar" style="display:none">
-      <h2 style="margin-bottom:22px">Bar &amp; Dépenses</h2>
-      <div class="statGrid" id="barStatGrid"></div>
-
+    <section class="panel" id="panel-dept-vip" style="display:none">
+      <h2 style="margin-bottom:22px">Salle VIP</h2>
+      <div class="statGrid"><div class="statCard"><div class="num" id="ca-vip">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
       <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Créer une boisson / un cocktail</h3>
-        <form id="boissonForm">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter un produit</h3>
+        <form id="form-vip">
           <div class="row3">
-            <div class="field"><label for="bNom">Nom</label><input id="bNom" required></div>
-            <div class="field">
-              <label for="bCategorie">Catégorie</label>
-              <select id="bCategorie">
-                <option>Boisson</option>
-                <option>Cocktail</option>
-              </select>
-            </div>
-            <div class="field"><label for="bPrix">Prix (F CFA)</label><input id="bPrix" type="number" min="0" required></div>
+            <div class="field"><label for="nom-vip">Nom du produit</label><input id="nom-vip" required></div>
+            <div class="field"><label for="qte-vip">Quantité</label><input id="qte-vip" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="prix-vip">Prix unitaire (F CFA)</label><input id="prix-vip" type="number" min="0" required></div>
           </div>
-          <button class="btn" type="submit">Ajouter à la carte</button>
+          <button class="btn" type="submit">Ajouter</button>
         </form>
       </div>
       <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Carte boissons &amp; cocktails</h3>
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Produits enregistrés</h3>
         <div class="tableWrap"><table class="dataTable">
-          <thead><tr><th>Nom</th><th>Catégorie</th><th>Prix</th><th></th></tr></thead>
-          <tbody id="boissonsBody"></tbody>
-        </table></div>
-      </div>
-
-      <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Enregistrer une dépense</h3>
-        <form id="depenseForm">
-          <div class="row3">
-            <div class="field">
-              <label for="dCategorie">Catégorie</label>
-              <select id="dCategorie">
-                <option>Boîte</option>
-                <option>Bar</option>
-                <option>Carré VIP</option>
-                <option>Cigar Hall</option>
-              </select>
-            </div>
-            <div class="field"><label for="dMontant">Montant (F CFA)</label><input id="dMontant" type="number" min="0" required></div>
-            <div class="field"><label for="dDate">Date</label><input id="dDate" type="date" required></div>
-          </div>
-          <div class="field"><label for="dDesc">Description</label><input id="dDesc" placeholder="Ex : achat glaçons, réparation frigo…"></div>
-          <button class="btn" type="submit">Enregistrer la dépense</button>
-        </form>
-      </div>
-      <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Dépenses enregistrées</h3>
-        <div class="tableWrap"><table class="dataTable">
-          <thead><tr><th>Date</th><th>Catégorie</th><th>Description</th><th>Montant</th><th></th></tr></thead>
-          <tbody id="depensesBody"></tbody>
-        </table></div>
-      </div>
-
-      <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Compte rendu boissons</h3>
-        <form id="venteForm">
-          <div class="row3">
-            <div class="field"><label for="vBoisson">Boisson</label><select id="vBoisson"></select></div>
-            <div class="field"><label for="vQte">Quantité</label><input id="vQte" type="number" min="1" value="1" required></div>
-            <div class="field"><label for="vSoiree">Soirée</label><select id="vSoiree"><option value="">— Non liée à une soirée —</option></select></div>
-          </div>
-          <div class="field"><label for="vDate">Date</label><input id="vDate" type="date" required></div>
-          <button class="btn" type="submit">Ajouter au compte rendu</button>
-        </form>
-      </div>
-      <div class="adminPanel">
-        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Historique des ventes</h3>
-        <div class="tableWrap"><table class="dataTable">
-          <thead><tr><th>Date</th><th>Soirée</th><th>Boisson</th><th>Qté</th><th>Montant</th><th></th></tr></thead>
-          <tbody id="ventesBody"></tbody>
+          <thead><tr><th>Produit</th><th>Qté</th><th>Prix unit.</th><th>Total</th><th></th></tr></thead>
+          <tbody id="body-vip"></tbody>
         </table></div>
       </div>
     </section>
 
-    <section class="panel" id="panel-privatisations" style="display:none">
-      <h2 style="margin-bottom:22px">Demandes de privatisation</h2>
+    <section class="panel" id="panel-dept-cigare" style="display:none">
+      <h2 style="margin-bottom:22px">Cigar Hall</h2>
+      <div class="statGrid"><div class="statCard"><div class="num" id="ca-cigare">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
       <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter un produit</h3>
+        <form id="form-cigare">
+          <div class="row3">
+            <div class="field"><label for="nom-cigare">Nom du produit</label><input id="nom-cigare" required></div>
+            <div class="field"><label for="qte-cigare">Quantité</label><input id="qte-cigare" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="prix-cigare">Prix unitaire (F CFA)</label><input id="prix-cigare" type="number" min="0" required></div>
+          </div>
+          <button class="btn" type="submit">Ajouter</button>
+        </form>
+      </div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Produits enregistrés</h3>
         <div class="tableWrap"><table class="dataTable">
-          <thead><tr><th>Nom / société</th><th>Contact</th><th>Date</th><th>Pers.</th><th>Notes</th><th>Statut</th><th></th></tr></thead>
-          <tbody id="privBody"></tbody>
+          <thead><tr><th>Produit</th><th>Qté</th><th>Prix unit.</th><th>Total</th><th></th></tr></thead>
+          <tbody id="body-cigare"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-dept-bar" style="display:none">
+      <h2 style="margin-bottom:22px">Bar</h2>
+      <div class="statGrid"><div class="statCard"><div class="num" id="ca-bar">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter un produit</h3>
+        <form id="form-bar">
+          <div class="row3">
+            <div class="field"><label for="nom-bar">Nom du produit</label><input id="nom-bar" required></div>
+            <div class="field"><label for="qte-bar">Quantité</label><input id="qte-bar" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="prix-bar">Prix unitaire (F CFA)</label><input id="prix-bar" type="number" min="0" required></div>
+          </div>
+          <button class="btn" type="submit">Ajouter</button>
+        </form>
+      </div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Produits enregistrés</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Produit</th><th>Qté</th><th>Prix unit.</th><th>Total</th><th></th></tr></thead>
+          <tbody id="body-bar"></tbody>
         </table></div>
       </div>
     </section>
@@ -262,18 +184,19 @@
           <div class="confirm" id="changePassConfirm">Mot de passe mis à jour.</div>
         </form>
 
-        <p style="margin-bottom:10px">Vous pouvez supprimer ce compte gérant (par exemple, le compte par défaut créé via <code>creer-gerant.html</code>) une fois qu'un autre compte existe. <strong>Assurez-vous d'avoir créé un autre accès gérant avant</strong> (Paramètres → Comptes gérant, plus bas) : si c'est le seul compte, le supprimer vous bloquera hors de l'espace gérant.</p>
+        <p style="margin-bottom:10px">Vous pouvez supprimer ce compte gérant (par exemple, le compte par défaut créé via <code>compte-gerant.html</code>) une fois qu'un autre compte existe. <strong>Assurez-vous d'avoir créé un autre accès gérant avant</strong> (Paramètres → Comptes gérant, plus bas) : si c'est le seul compte, le supprimer vous bloquera hors de l'espace gérant.</p>
         <button class="btn danger small" id="deleteMyAccount">Supprimer ce compte gérant</button>
         <p class="errorMsg" id="deleteAccountError">—</p>
       </div>
       <div class="adminPanel">
         <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:10px">Comptes gérant</h3>
         <p style="margin-bottom:14px">Donnez accès à l'espace gérant à un membre de l'équipe sans passer par la console Firebase.</p>
-        <a class="btn small" href="creer-admin.html">Créer un accès gérant</a>
+        <a class="btn small" href="compte-gerant.html">Créer un accès gérant</a>
       </div>
       <div class="adminPanel">
         <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:10px">État des données</h3>
         <p style="margin-bottom:14px">Les données sont stockées sur Firebase Firestore et partagées en temps réel entre le site public et cet espace gérant, sur n'importe quel appareil. L'accès à cet espace est protégé par un compte (voir README pour créer/gérer les comptes gérant) ; pensez à durcir les règles Firestore avant l'ouverture réelle (voir <code>firestore.rules</code>).</p>
+        <p style="margin-bottom:14px">Attention : ceci efface aussi les demandes envoyées par le site public (réservations, guestlist, billets, privatisations, newsletter), même si elles ne sont plus affichées dans cet espace gérant.</p>
         <button class="btn danger small" id="resetData">Réinitialiser toutes les données de test</button>
       </div>
       <div class="adminPanel">
@@ -285,7 +208,6 @@
   </main>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>

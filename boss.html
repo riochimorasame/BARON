@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le Baron — Vue du boss</title>
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="authGate" id="authGate">
+  <form class="card authCard" id="loginForm" novalidate>
+    <div class="brandmark" style="margin-bottom:18px;justify-content:center">
+      <img class="logoRing" src="assets/logo.png" width="64" height="64" alt="Le Baron">
+      <span class="neon">Le Baron</span>
+    </div>
+    <h2 style="font-size:1.4rem;margin-bottom:6px;text-align:center">Vue du boss</h2>
+    <p style="font-size:.82rem;text-align:center;margin-bottom:18px">Connexion avec les mêmes identifiants que l'espace gérant.</p>
+    <div class="field"><label for="loginEmail">E-mail</label><input id="loginEmail" type="email" autocomplete="username" required></div>
+    <div class="field"><label for="loginPass">Mot de passe</label><input id="loginPass" type="password" autocomplete="current-password" required></div>
+    <button class="btn block" type="submit">Se connecter</button>
+    <p class="errorMsg" id="loginError">E-mail ou mot de passe incorrect.</p>
+  </form>
+</div>
+
+<div class="adminShell" id="adminShell" style="display:none">
+  <aside class="adminSide">
+    <div class="brandmark" style="margin-bottom:26px">
+      <img class="logoRing" src="assets/logo.png" width="42" height="42" alt="Le Baron">
+      <span class="neon" style="font-size:1.05rem">Le Baron</span>
+    </div>
+    <a href="#" class="navlink active" data-target="synthese">Synthèse</a>
+    <a href="#" class="navlink" data-target="dept-boite">Boîte</a>
+    <a href="#" class="navlink" data-target="dept-vip">Salle VIP</a>
+    <a href="#" class="navlink" data-target="dept-cigare">Cigar Hall</a>
+    <a href="#" class="navlink" data-target="dept-bar">Bar</a>
+    <hr class="rule" style="margin:18px 0">
+    <a href="admin.html">Espace gérant (édition)</a>
+    <a href="#" id="logoutBtn" style="color:var(--riot)">Se déconnecter</a>
+  </aside>
+
+  <main class="adminMain">
+
+    <section class="panel" id="panel-synthese">
+      <h2 style="margin-bottom:22px">Synthèse — tous les départements</h2>
+      <p style="margin-bottom:18px;color:var(--smoke);font-size:.85rem">Lecture seule : ce que le gérant saisit dans l'espace admin apparaît ici en temps réel, où que vous soyez.</p>
+      <div class="statGrid" id="statGrid"></div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Chiffre d'affaires total</h3>
+        <div class="num" id="caTotal" style="font-family:var(--font-display);font-size:2rem">0 F CFA</div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-dept-boite" style="display:none">
+      <h2 style="margin-bottom:22px">Boîte</h2>
+      <div class="statGrid"><div class="statCard"><div class="num" id="ca-boite">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
+      <div class="adminPanel">
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Produit</th><th>Qté</th><th>Prix unit.</th><th>Total</th></tr></thead>
+          <tbody id="body-boite"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-dept-vip" style="display:none">
+      <h2 style="margin-bottom:22px">Salle VIP</h2>
+      <div class="statGrid"><div class="statCard"><div class="num" id="ca-vip">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
+      <div class="adminPanel">
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Produit</th><th>Qté</th><th>Prix unit.</th><th>Total</th></tr></thead>
+          <tbody id="body-vip"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-dept-cigare" style="display:none">
+      <h2 style="margin-bottom:22px">Cigar Hall</h2>
+      <div class="statGrid"><div class="statCard"><div class="num" id="ca-cigare">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
+      <div class="adminPanel">
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Produit</th><th>Qté</th><th>Prix unit.</th><th>Total</th></tr></thead>
+          <tbody id="body-cigare"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-dept-bar" style="display:none">
+      <h2 style="margin-bottom:22px">Bar</h2>
+      <div class="statGrid"><div class="statCard"><div class="num" id="ca-bar">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
+      <div class="adminPanel">
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Produit</th><th>Qté</th><th>Prix unit.</th><th>Total</th></tr></thead>
+          <tbody id="body-bar"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/boss.js"></script>
+</body>
+</html>

@@ -39,7 +39,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 const LB_DB = (function () {
-  const COLLECTIONS = ["events", "reservations", "guestlist", "tickets", "privatizations", "newsletter", "clients", "boissons", "depenses", "ventesBoissons"];
+  const COLLECTIONS = ["events", "reservations", "guestlist", "tickets", "privatizations", "newsletter", "clients", "boissons", "depenses", "ventesBoissons", "produits"];
   const cache = {};   // col -> array (rempli en direct par Firestore)
   const watching = {}; // col -> true une fois l'écoute temps réel lancée
 
