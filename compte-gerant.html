@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le Baron — Compte gérant</title>
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="authGate" id="gate">
+  <div class="card authCard" id="card">
+    <div class="brandmark" style="margin-bottom:18px;justify-content:center">
+      <img class="logoRing" src="assets/logo.png" width="64" height="64" alt="Le Baron">
+      <span class="neon">Le Baron</span>
+    </div>
+
+    <div id="stateChecking">
+      <p style="text-align:center">Vérification…</p>
+    </div>
+
+    <!-- Cas 1 : aucun compte gérant n'existe encore -->
+    <form id="firstForm" novalidate style="display:none">
+      <h2 style="font-size:1.3rem;margin-bottom:6px;text-align:center">Créer le premier accès gérant</h2>
+      <p style="font-size:.82rem;margin-bottom:18px;text-align:center">Identifiants par défaut pré-remplis ci-dessous — modifiables avant de valider. Pensez à changer ce mot de passe depuis <strong>admin.html → Paramètres → Mon compte</strong> une fois connecté.</p>
+      <div class="field"><label for="firstEmail">E-mail du compte gérant</label><input id="firstEmail" type="email" autocomplete="username" required></div>
+      <div class="field"><label for="firstPass">Mot de passe (6 caractères minimum)</label><input id="firstPass" type="text" autocomplete="new-password" minlength="6" required></div>
+      <button class="btn block" type="submit">Créer ce compte</button>
+      <p class="errorMsg" id="firstError">—</p>
+    </form>
+
+    <div id="firstDone" style="display:none">
+      <h2 style="font-size:1.3rem;margin-bottom:10px;text-align:center">Compte créé ✅</h2>
+      <p style="text-align:center">Identifiants : <strong id="firstDoneEmail"></strong> — <span id="firstDonePass" style="font-family:var(--font-mono)"></span></p>
+      <a class="btn block" style="margin-top:18px" href="admin.html">Aller à l'espace gérant</a>
+    </div>
+
+    <!-- Cas 2 : un compte existe déjà, connexion requise pour en créer un autre -->
+    <form id="loginForm" novalidate style="display:none">
+      <h2 style="font-size:1.3rem;margin-bottom:6px;text-align:center">Connexion gérant</h2>
+      <p style="font-size:.82rem;text-align:center;margin-bottom:18px">Connectez-vous avec un compte gérant existant pour pouvoir en créer un nouveau.</p>
+      <div class="field"><label for="loginEmail">E-mail</label><input id="loginEmail" type="email" autocomplete="username" required></div>
+      <div class="field"><label for="loginPass">Mot de passe</label><input id="loginPass" type="password" autocomplete="current-password" required></div>
+      <button class="btn block" type="submit">Se connecter</button>
+      <p class="errorMsg" id="loginError">E-mail ou mot de passe incorrect.</p>
+    </form>
+
+    <div id="newAccountBlock" style="display:none">
+      <h2 style="font-size:1.3rem;margin-bottom:6px;text-align:center">Créer un accès gérant</h2>
+      <p style="font-size:.82rem;margin-bottom:18px;text-align:center">Connecté en tant que <strong id="myEmail">—</strong>. Donnez un e-mail et un mot de passe à la personne qui doit avoir accès à l'espace gérant.</p>
+      <form id="newForm" novalidate>
+        <div class="field"><label for="newEmail">E-mail du nouveau compte</label><input id="newEmail" type="email" required></div>
+        <div class="field"><label for="newPass">Mot de passe (6 caractères minimum)</label><input id="newPass" type="password" minlength="6" required></div>
+        <div class="field"><label for="newPassConfirm">Confirmer le mot de passe</label><input id="newPassConfirm" type="password" minlength="6" required></div>
+        <button class="btn block" type="submit">Créer ce compte gérant</button>
+        <p class="errorMsg" id="newError">—</p>
+        <div class="confirm" id="newConfirm">Compte créé — vous pouvez transmettre les identifiants à la personne concernée.</div>
+      </form>
+      <a href="#" id="logoutBtn" style="display:block;margin-top:14px;text-align:center;color:var(--riot);font-size:.85rem">Se déconnecter</a>
+    </div>
+
+    <p style="margin-top:16px;font-size:.8rem;text-align:center"><a href="index.html" style="color:var(--smoke)">← Retour au site public</a></p>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="js/data.js"></script>
+<script src="js/compte-gerant.js"></script>
+</body>
+</html>

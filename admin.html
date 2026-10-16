@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le Baron — Espace gérant</title>
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="authGate" id="authGate">
+  <form class="card authCard" id="loginForm" novalidate>
+    <div class="brandmark" style="margin-bottom:18px;justify-content:center">
+      <img class="logoRing" src="assets/logo.png" width="64" height="64" alt="Le Baron">
+      <span class="neon">Le Baron</span>
+    </div>
+    <h2 style="font-size:1.4rem;margin-bottom:18px;text-align:center">Connexion gérant</h2>
+    <div class="field"><label for="loginEmail">E-mail</label><input id="loginEmail" type="email" autocomplete="username" required></div>
+    <div class="field"><label for="loginPass">Mot de passe</label><input id="loginPass" type="password" autocomplete="current-password" required></div>
+    <button class="btn block" type="submit">Se connecter</button>
+    <p class="errorMsg" id="loginError">E-mail ou mot de passe incorrect.</p>
+    <p style="margin-top:16px;font-size:.8rem;text-align:center"><a href="index.html" style="color:var(--smoke)">← Retour au site public</a></p>
+  </form>
+</div>
+
+<div class="adminShell" id="adminShell" style="display:none">
+  <aside class="adminSide">
+    <div class="brandmark" style="margin-bottom:26px">
+      <img class="logoRing" src="assets/logo.png" width="42" height="42" alt="Le Baron">
+      <span class="neon" style="font-size:1.05rem">Le Baron</span>
+    </div>
+    <a href="#" class="navlink active" data-target="agenda">Agenda</a>
+    <a href="#" class="navlink" data-target="dept-boite">Boîte</a>
+    <a href="#" class="navlink" data-target="dept-vip">Salle VIP</a>
+    <a href="#" class="navlink" data-target="dept-cigare">Cigar Hall</a>
+    <a href="#" class="navlink" data-target="dept-bar">Bar</a>
+    <a href="#" class="navlink" data-target="parametres">Paramètres</a>
+    <hr class="rule" style="margin:18px 0">
+    <a href="boss.html">Vue du boss (lecture seule)</a>
+    <hr class="rule" style="margin:18px 0">
+    <a href="index.html">← Retour au site public</a>
+    <a href="#" id="logoutBtn" style="color:var(--riot)">Se déconnecter</a>
+  </aside>
+
+  <main class="adminMain">
+
+    <section class="panel" id="panel-agenda">
+      <h2 style="margin-bottom:22px">Agenda des soirées</h2>
+      <div class="adminPanel">
+        <h3 id="eventFormTitle" style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter une soirée</h3>
+        <form id="eventForm">
+          <div class="row2">
+            <div class="field"><label for="eNom">Nom de la soirée</label><input id="eNom" required></div>
+            <div class="field"><label for="eGenre">Style musical</label><input id="eGenre" placeholder="Afrobeat, Électro…"></div>
+          </div>
+          <div class="row2">
+            <div class="field"><label for="eDate">Date</label><input id="eDate" type="date" required></div>
+            <div class="field"><label for="eHeure">Heure</label><input id="eHeure" placeholder="23h00"></div>
+          </div>
+          <div class="field"><label for="eDesc">Description</label><textarea id="eDesc" rows="2"></textarea></div>
+          <div class="field"><label for="eAffiche">Affiche (URL de l'image)</label><input id="eAffiche" type="url" placeholder="https://…"></div>
+          <button class="btn" type="submit" id="eventFormSubmit">Publier la soirée</button>
+          <button class="btn ghost" type="button" id="eventFormCancel" style="display:none;margin-left:10px">Annuler la modification</button>
+        </form>
+      </div>
+      <div class="adminPanel">
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Affiche</th><th>Soirée</th><th>Date</th><th>Style</th><th></th></tr></thead>
+          <tbody id="eventsBody"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+
+
+    <section class="panel" id="panel-dept-boite" style="display:none">
+      <h2 style="margin-bottom:22px">Boîte</h2>
+      <div class="statGrid"><div class="statCard"><div class="num" id="ca-boite">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter du stock (nouveau produit ou réapprovisionnement)</h3>
+        <form id="stock-form-boite">
+          <div class="row3">
+            <div class="field"><label for="stock-nom-boite">Nom du produit</label><input id="stock-nom-boite" required></div>
+            <div class="field"><label for="stock-qte-boite">Quantité ajoutée</label><input id="stock-qte-boite" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="stock-prix-boite">Prix unitaire de vente (F CFA)</label><input id="stock-prix-boite" type="number" min="0" required></div>
+          </div>
+          <button class="btn" type="submit">Ajouter au stock</button>
+          <p style="font-size:.8rem;margin-top:8px;color:var(--smoke)">Si le nom correspond à un produit déjà existant dans ce département, la quantité s'ajoute à son stock (le prix est mis à jour). Sinon, un nouveau produit est créé.</p>
+        </form>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Enregistrer une vente (sortie de stock)</h3>
+        <form id="vente-form-boite">
+          <div class="row3">
+            <div class="field"><label for="vente-produit-boite">Produit</label><select id="vente-produit-boite"></select></div>
+            <div class="field"><label for="vente-qte-boite">Quantité vendue</label><input id="vente-qte-boite" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="vente-date-boite">Date</label><input id="vente-date-boite" type="date" required></div>
+          </div>
+          <button class="btn" type="submit">Enregistrer la vente</button>
+        </form>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Stock actuel</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Produit</th><th>Prix unit.</th><th>Total entré</th><th>Total vendu</th><th>Stock actuel</th><th>CA généré</th><th></th></tr></thead>
+          <tbody id="body-boite"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Historique des mouvements (15 derniers)</h3>
+        <p style="font-size:.8rem;margin-bottom:10px;color:var(--smoke)">Modifiable librement pendant 10 minutes après la saisie. Passé ce délai, seul le boss peut autoriser une modification depuis son espace.</p>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Mouvement</th><th>Qté</th><th>Montant</th><th>Actions</th></tr></thead>
+          <tbody id="hist-boite"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Journal des modifications</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Action</th><th>Avant</th><th>Après</th><th>Autorisé par</th></tr></thead>
+          <tbody id="modhist-boite"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-dept-vip" style="display:none">
+      <h2 style="margin-bottom:22px">Salle VIP</h2>
+      <div class="statGrid"><div class="statCard"><div class="num" id="ca-vip">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter du stock (nouveau produit ou réapprovisionnement)</h3>
+        <form id="stock-form-vip">
+          <div class="row3">
+            <div class="field"><label for="stock-nom-vip">Nom du produit</label><input id="stock-nom-vip" required></div>
+            <div class="field"><label for="stock-qte-vip">Quantité ajoutée</label><input id="stock-qte-vip" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="stock-prix-vip">Prix unitaire de vente (F CFA)</label><input id="stock-prix-vip" type="number" min="0" required></div>
+          </div>
+          <button class="btn" type="submit">Ajouter au stock</button>
+          <p style="font-size:.8rem;margin-top:8px;color:var(--smoke)">Si le nom correspond à un produit déjà existant dans ce département, la quantité s'ajoute à son stock (le prix est mis à jour). Sinon, un nouveau produit est créé.</p>
+        </form>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Enregistrer une vente (sortie de stock)</h3>
+        <form id="vente-form-vip">
+          <div class="row3">
+            <div class="field"><label for="vente-produit-vip">Produit</label><select id="vente-produit-vip"></select></div>
+            <div class="field"><label for="vente-qte-vip">Quantité vendue</label><input id="vente-qte-vip" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="vente-date-vip">Date</label><input id="vente-date-vip" type="date" required></div>
+          </div>
+          <button class="btn" type="submit">Enregistrer la vente</button>
+        </form>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Stock actuel</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Produit</th><th>Prix unit.</th><th>Total entré</th><th>Total vendu</th><th>Stock actuel</th><th>CA généré</th><th></th></tr></thead>
+          <tbody id="body-vip"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Historique des mouvements (15 derniers)</h3>
+        <p style="font-size:.8rem;margin-bottom:10px;color:var(--smoke)">Modifiable librement pendant 10 minutes après la saisie. Passé ce délai, seul le boss peut autoriser une modification depuis son espace.</p>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Mouvement</th><th>Qté</th><th>Montant</th><th>Actions</th></tr></thead>
+          <tbody id="hist-vip"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Journal des modifications</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Action</th><th>Avant</th><th>Après</th><th>Autorisé par</th></tr></thead>
+          <tbody id="modhist-vip"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-dept-cigare" style="display:none">
+      <h2 style="margin-bottom:22px">Cigar Hall</h2>
+      <div class="statGrid"><div class="statCard"><div class="num" id="ca-cigare">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter du stock (nouveau produit ou réapprovisionnement)</h3>
+        <form id="stock-form-cigare">
+          <div class="row3">
+            <div class="field"><label for="stock-nom-cigare">Nom du produit</label><input id="stock-nom-cigare" required></div>
+            <div class="field"><label for="stock-qte-cigare">Quantité ajoutée</label><input id="stock-qte-cigare" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="stock-prix-cigare">Prix unitaire de vente (F CFA)</label><input id="stock-prix-cigare" type="number" min="0" required></div>
+          </div>
+          <button class="btn" type="submit">Ajouter au stock</button>
+          <p style="font-size:.8rem;margin-top:8px;color:var(--smoke)">Si le nom correspond à un produit déjà existant dans ce département, la quantité s'ajoute à son stock (le prix est mis à jour). Sinon, un nouveau produit est créé.</p>
+        </form>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Enregistrer une vente (sortie de stock)</h3>
+        <form id="vente-form-cigare">
+          <div class="row3">
+            <div class="field"><label for="vente-produit-cigare">Produit</label><select id="vente-produit-cigare"></select></div>
+            <div class="field"><label for="vente-qte-cigare">Quantité vendue</label><input id="vente-qte-cigare" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="vente-date-cigare">Date</label><input id="vente-date-cigare" type="date" required></div>
+          </div>
+          <button class="btn" type="submit">Enregistrer la vente</button>
+        </form>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Stock actuel</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Produit</th><th>Prix unit.</th><th>Total entré</th><th>Total vendu</th><th>Stock actuel</th><th>CA généré</th><th></th></tr></thead>
+          <tbody id="body-cigare"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Historique des mouvements (15 derniers)</h3>
+        <p style="font-size:.8rem;margin-bottom:10px;color:var(--smoke)">Modifiable librement pendant 10 minutes après la saisie. Passé ce délai, seul le boss peut autoriser une modification depuis son espace.</p>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Mouvement</th><th>Qté</th><th>Montant</th><th>Actions</th></tr></thead>
+          <tbody id="hist-cigare"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Journal des modifications</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Action</th><th>Avant</th><th>Après</th><th>Autorisé par</th></tr></thead>
+          <tbody id="modhist-cigare"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-dept-bar" style="display:none">
+      <h2 style="margin-bottom:22px">Bar</h2>
+      <div class="statGrid"><div class="statCard"><div class="num" id="ca-bar">0 F CFA</div><div class="lbl">Chiffre d'affaires</div></div></div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Ajouter du stock (nouveau produit ou réapprovisionnement)</h3>
+        <form id="stock-form-bar">
+          <div class="row3">
+            <div class="field"><label for="stock-nom-bar">Nom du produit</label><input id="stock-nom-bar" required></div>
+            <div class="field"><label for="stock-qte-bar">Quantité ajoutée</label><input id="stock-qte-bar" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="stock-prix-bar">Prix unitaire de vente (F CFA)</label><input id="stock-prix-bar" type="number" min="0" required></div>
+          </div>
+          <button class="btn" type="submit">Ajouter au stock</button>
+          <p style="font-size:.8rem;margin-top:8px;color:var(--smoke)">Si le nom correspond à un produit déjà existant dans ce département, la quantité s'ajoute à son stock (le prix est mis à jour). Sinon, un nouveau produit est créé.</p>
+        </form>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Enregistrer une vente (sortie de stock)</h3>
+        <form id="vente-form-bar">
+          <div class="row3">
+            <div class="field"><label for="vente-produit-bar">Produit</label><select id="vente-produit-bar"></select></div>
+            <div class="field"><label for="vente-qte-bar">Quantité vendue</label><input id="vente-qte-bar" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="vente-date-bar">Date</label><input id="vente-date-bar" type="date" required></div>
+          </div>
+          <button class="btn" type="submit">Enregistrer la vente</button>
+        </form>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Stock actuel</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Produit</th><th>Prix unit.</th><th>Total entré</th><th>Total vendu</th><th>Stock actuel</th><th>CA généré</th><th></th></tr></thead>
+          <tbody id="body-bar"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Historique des mouvements (15 derniers)</h3>
+        <p style="font-size:.8rem;margin-bottom:10px;color:var(--smoke)">Modifiable librement pendant 10 minutes après la saisie. Passé ce délai, seul le boss peut autoriser une modification depuis son espace.</p>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Mouvement</th><th>Qté</th><th>Montant</th><th>Actions</th></tr></thead>
+          <tbody id="hist-bar"></tbody>
+        </table></div>
+      </div>
+
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:14px">Journal des modifications</h3>
+        <div class="tableWrap"><table class="dataTable">
+          <thead><tr><th>Date</th><th>Produit</th><th>Action</th><th>Avant</th><th>Après</th><th>Autorisé par</th></tr></thead>
+          <tbody id="modhist-bar"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-parametres" style="display:none">
+      <h2 style="margin-bottom:22px">Paramètres</h2>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:10px">Mon compte</h3>
+        <p style="margin-bottom:14px">Connecté en tant que <strong id="myAccountEmail">—</strong>.</p>
+
+        <form id="changePassForm" style="margin-bottom:22px" novalidate>
+          <div class="row2">
+            <div class="field"><label for="curPass">Mot de passe actuel</label><input id="curPass" type="password" autocomplete="current-password" required></div>
+            <div class="field"><label for="newPass2">Nouveau mot de passe (6 car. min.)</label><input id="newPass2" type="password" autocomplete="new-password" minlength="6" required></div>
+          </div>
+          <button class="btn small" type="submit">Changer le mot de passe</button>
+          <p class="errorMsg" id="changePassError">—</p>
+          <div class="confirm" id="changePassConfirm">Mot de passe mis à jour.</div>
+        </form>
+
+        <p style="margin-bottom:10px">Vous pouvez supprimer ce compte gérant (par exemple, le compte par défaut créé via <code>compte-gerant.html</code>) une fois qu'un autre compte existe. <strong>Assurez-vous d'avoir créé un autre accès gérant avant</strong> (Paramètres → Comptes gérant, plus bas) : si c'est le seul compte, le supprimer vous bloquera hors de l'espace gérant.</p>
+        <button class="btn danger small" id="deleteMyAccount">Supprimer ce compte gérant</button>
+        <p class="errorMsg" id="deleteAccountError">—</p>
+      </div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:10px">Comptes gérant</h3>
+        <p style="margin-bottom:14px">Donnez accès à l'espace gérant à un membre de l'équipe sans passer par la console Firebase.</p>
+        <a class="btn small" href="compte-gerant.html">Créer un accès gérant</a>
+      </div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:10px">État des données</h3>
+        <p style="margin-bottom:14px">Les données sont stockées sur Firebase Firestore et partagées en temps réel entre le site public et cet espace gérant, sur n'importe quel appareil. L'accès à cet espace est protégé par un compte (voir README pour créer/gérer les comptes gérant) ; pensez à durcir les règles Firestore avant l'ouverture réelle (voir <code>firestore.rules</code>).</p>
+        <p style="margin-bottom:14px">Attention : ceci efface aussi les demandes envoyées par le site public (réservations, guestlist, billets, privatisations, newsletter), même si elles ne sont plus affichées dans cet espace gérant.</p>
+        <button class="btn danger small" id="resetData">Réinitialiser toutes les données de test</button>
+      </div>
+      <div class="adminPanel">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:10px">Pixels &amp; analytics</h3>
+        <p>Le Meta Pixel et Google Analytics se branchent dans le <code>&lt;head&gt;</code> de <code>index.html</code> une fois le site déployé sur un vrai nom de domaine (ces scripts ne peuvent pas tourner correctement en test local en <code>file://</code>).</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/account.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

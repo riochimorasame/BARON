@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le Baron — Club, Lomé</title>
+<link rel="icon" type="image/png" href="assets/logo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="top" id="siteHeader">
+  <div class="nav">
+    <a href="#accueil" class="brandmark">
+      <img class="logoRing" src="assets/logo.png" width="56" height="56" alt="Le Baron">
+      <span class="neon">Le Baron</span>
+    </a>
+    <nav class="links">
+      <div class="navScroll" id="navScroll">
+        <a href="#agenda">Agenda</a>
+        <a href="#carte">Carte</a>
+        <a href="#infos">Infos</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <a href="https://wa.me/22870228564" class="btn" target="_blank" rel="noopener">Contacter</a>
+    </nav>
+    <button class="menuToggle" id="menuToggle" aria-label="Menu" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<main id="accueil">
+  <section class="hero">
+    <video class="heroVideo" id="heroVideo" autoplay muted loop playsinline poster="assets/hero-poster.jpg">
+      <source src="assets/hero-teaser.mp4" type="video/mp4">
+    </video>
+    <div class="heroFallback" id="heroFallback"></div>
+    <div class="heroOverlay"></div>
+    <div class="heroStamp">Grand<br>Opening<br>15 oct.</div>
+    <div class="heroContent wrap">
+      <h1>LOMÉ<br>A UN<br>NOUVEAU<br>BARON.</h1>
+      <p class="lede">Afrobeat, amapiano, hip-hop, électro — une identité différente chaque semaine, sous un même toit.</p>
+      <div class="ctas">
+        <a href="https://wa.me/22870228564" class="btn" target="_blank" rel="noopener">Contacter sur WhatsApp</a>
+        <a href="#agenda" class="btn ghost">Voir le programme</a>
+      </div>
+      <div class="heroNext" id="heroNext" style="display:none">
+        <span class="dot"></span>
+        <div><strong id="heroNextName">Prochaine soirée</strong><p id="heroNextDate"></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="agenda">
+    <div class="wrap">
+      <div class="sectionHead">
+        <h2>L'agenda</h2>
+        <p class="lede">Les prochaines soirées du Baron, à réserver directement depuis leur affiche.</p>
+      </div>
+      <div class="agendaGrid" id="agendaGrid"></div>
+    </div>
+  </section>
+
+  <section id="carte">
+    <div class="wrap">
+      <div class="sectionHead">
+        <h2>La carte</h2>
+        <p class="lede">Champagnes, tequilas, vodkas, whiskies et cognacs — la carte complète du Baron.</p>
+      </div>
+      <div class="menuTabs" id="menuTabs" role="tablist" aria-label="Catégories de la carte"></div>
+      <div class="menuPanel" id="menuPanel" role="tabpanel"></div>
+      <p class="menuNote">Prix en FCFA, par bouteille sauf mention « Au verre ». Alcool à consommer avec modération — interdit aux moins de 18 ans.</p>
+      <h3 class="subHead">Les affiches de la carte</h3>
+      <div class="posterStrip" id="posterStrip"></div>
+      <h3 class="subHead">Formules carré</h3>
+      <div class="carreGrid">
+        <div class="carreCard"><div class="tag" style="border-color:var(--line)">Table Bar</div><div class="price">150 000 F</div><p>4–6 pers · spiritueux standard, mixers, place assise garantie.</p></div>
+        <div class="carreCard"><div class="tag">Carré VIP</div><div class="price">300 000 F</div><p>6–8 pers · bouteille premium, service dédié, vue sur la piste.</p></div>
+        <div class="carreCard"><div class="tag">Cigar Hall · VIP</div><div class="price">350 000 F</div><p>4–8 pers · salon fumoir séparé, cave à cigares et spiritueux d'exception, service dédié.</p></div>
+        <div class="carreCard"><div class="tag">Espace Prestige</div><div class="price">600 000 F</div><p>8–12 pers · champagne et spiritueux haut de gamme, hôte personnel.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="galerie">
+    <div class="wrap">
+      <div class="sectionHead">
+        <h2>Galerie</h2>
+        <p class="lede">L'ambiance du Baron, en images.</p>
+      </div>
+      <div class="galleryGrid">
+        <img class="g1" src="assets/gallery/salon-lounge-1.jpg" alt="Salon lounge Le Baron" loading="lazy">
+        <img class="g2" src="assets/gallery/video-1.jpg" alt="Bar et étagères lumineuses du Baron" loading="lazy">
+        <img class="g3" src="assets/gallery/video-4.jpg" alt="Salon VIP aux lumières violettes" loading="lazy">
+        <img class="g4" src="assets/gallery/video-2.jpg" alt="Carte du Baron" loading="lazy">
+        <img class="g5" src="assets/gallery/video-3.jpg" alt="Bouteille de champagne servie au Baron" loading="lazy">
+        <img class="g6" src="assets/gallery/video-5.jpg" alt="Bouteille au bar du Baron" loading="lazy">
+      </div>
+    </div>
+
+  </section>
+
+  <section class="alt" id="infos">
+    <div class="wrap">
+      <div class="sectionHead"><h2>Infos pratiques</h2></div>
+      <div class="infoGrid">
+        <div><h3>Dress code</h3><p>Tenue chic / élégante exigée. Pas de tenue de sport, tongs ni débardeurs. L'accès reste à l'appréciation de la sécurité.</p></div>
+        <div><h3>Âge minimum</h3><p>18 ans révolus. Pièce d'identité valide exigée à l'entrée.</p></div>
+        <div><h3>Horaires</h3><p>Jeudi – Dimanche, 22h00 – 05h00. Fermé lundi, mardi, mercredi (sauf soirées privées).</p></div>
+        <div><h3>Parking &amp; taxis</h3><p>Parking gardé sur place, station de taxis à proximité immédiate.</p></div>
+      </div>
+      <div class="mapEmbed">
+        <iframe loading="lazy" src="https://www.google.com/maps?q=6.1916046,1.1467324&z=17&output=embed" allowfullscreen></iframe>
+      </div>
+      <div class="contactRow" id="contact">
+        <a class="btn" href="https://wa.me/22870228564" target="_blank" rel="noopener">Contacter sur WhatsApp</a>
+        <a class="btn ghost" href="https://maps.app.goo.gl/GJHNZfAZ6ndvFxoq6" target="_blank" rel="noopener">Ouvrir l'itinéraire</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footGrid">
+      <div>
+        <div class="brandmark" style="margin-bottom:10px">
+          <img class="logoRing" src="assets/logo.png" width="44" height="44" alt="Le Baron">
+          <span style="font-family:var(--font-display);font-size:1.1rem;color:var(--gold-bright)">Le Baron</span>
+        </div>
+        <p style="max-width:34ch">Avenue de la Libération, Lomé, Togo.</p>
+      </div>
+      <div style="max-width:340px">
+        <h3 style="font-family:var(--font-display);font-weight:500;font-size:1rem;margin-bottom:6px">Restez informés</h3>
+        <p>Programme des soirées et accès prioritaires, par e-mail.</p>
+        <form class="newsletterForm" id="newsForm">
+          <input type="email" id="newsEmail" placeholder="Votre e-mail" required>
+          <button class="btn" type="submit">S'inscrire</button>
+        </form>
+        <div class="confirm" id="newsConfirm" style="margin-top:10px">Inscription enregistrée — merci !</div>
+      </div>
+    </div>
+    <hr class="rule" style="margin:34px 0">
+    <div class="legal">
+      <span>© <span id="year"></span> Le Baron. Entrée interdite aux moins de 18 ans.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Affiche de la carte">
+  <button class="nav prev" aria-label="Précédente">‹</button>
+  <img alt="">
+  <button class="nav next" aria-label="Suivante">›</button>
+  <button class="close" aria-label="Fermer">✕</button>
+</div>
+
+<div class="audioWidget" id="audioWidget">
+  <button id="audioToggle" aria-label="Lecture">▶</button>
+  <div class="eq"><i></i><i></i><i></i></div>
+  <span>Ambiance Le Baron</span>
+</div>
+<audio id="ambianceAudio" loop preload="none">
+  <source src="assets/ambiance.mp3" type="audio/mpeg">
+</audio>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/menu.js"></script>
+</body>
+</html>
