@@ -135,8 +135,11 @@ const LB_DB = (function () {
         console.error("[LB_DB] seedIfEmpty('" + col + "') n'a pas pu vérifier la collection", err);
       });
     },
-    clearAll() {
+    // except : collections à ne pas toucher (ex. stock, ventes, journal).
+    clearAll(except) {
+      except = except || [];
       COLLECTIONS.forEach(function (col) {
+        if (except.indexOf(col) !== -1) return;
         db.collection(col).get().then(function (snap) {
           snap.forEach(function (doc) { doc.ref.delete(); });
         });

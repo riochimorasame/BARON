@@ -53,7 +53,9 @@
       });
   });
 
-  deleteBtn.addEventListener("click", function () {
+  // boss.html n'a pas de bouton de suppression de compte : seulement le
+  // changement de mot de passe.
+  if (deleteBtn) deleteBtn.addEventListener("click", function () {
     deleteErr.classList.remove("show");
 
     if (!confirm("Supprimer définitivement ce compte gérant ? Assurez-vous qu'un autre compte existe déjà — sinon vous perdrez l'accès à l'espace gérant.")) return;

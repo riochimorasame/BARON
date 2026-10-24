@@ -40,7 +40,7 @@
     <a href="#" class="navlink" data-target="dept-bar">Bar</a>
     <a href="#" class="navlink" data-target="parametres">Paramètres</a>
     <hr class="rule" style="margin:18px 0">
-    <a href="boss.html">Vue du boss (lecture seule)</a>
+    <a href="boss.html" id="bossLink" style="display:none">Vue du boss</a>
     <hr class="rule" style="margin:18px 0">
     <a href="index.html">← Retour au site public</a>
     <a href="#" id="logoutBtn" style="color:var(--riot)">Se déconnecter</a>
@@ -325,8 +325,8 @@
       <div class="adminPanel">
         <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:10px">État des données</h3>
         <p style="margin-bottom:14px">Les données sont stockées sur Firebase Firestore et partagées en temps réel entre le site public et cet espace gérant, sur n'importe quel appareil. L'accès à cet espace est protégé par un compte (voir README pour créer/gérer les comptes gérant) ; pensez à durcir les règles Firestore avant l'ouverture réelle (voir <code>firestore.rules</code>).</p>
-        <p style="margin-bottom:14px">Attention : ceci efface aussi les demandes envoyées par le site public (réservations, guestlist, billets, privatisations, newsletter), même si elles ne sont plus affichées dans cet espace gérant.</p>
-        <button class="btn danger small" id="resetData">Réinitialiser toutes les données de test</button>
+        <p style="margin-bottom:14px">Attention : ceci efface aussi les demandes envoyées par le site public (réservations, guestlist, billets, privatisations, newsletter), même si elles ne sont plus affichées dans cet espace gérant. Les produits, le stock, les ventes et le journal des modifications ne sont jamais effacés par ce bouton.</p>
+        <button class="btn danger small" id="resetData">Réinitialiser les données de test</button>
       </div>
       <div class="adminPanel">
         <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:10px">Pixels &amp; analytics</h3>
@@ -341,6 +341,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="js/data.js"></script>
+<script src="js/roles.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/account.js"></script>
 <script src="js/admin.js"></script>

@@ -56,6 +56,32 @@
     return { peut: false, raison: "verrouille" };
   }
 
+  // Stock d'un produit tel qu'il serait après un changement : si
+  // nouvelleQte est null, le mouvement mouvementId est retiré ; sinon sa
+  // quantité est remplacée. Sert à refuser tout changement qui ferait
+  // passer le stock sous zéro.
+  function stockProduit(produitId, mouvementId, nouvelleQte) {
+    var stock = 0;
+    LB_DB.list("mouvements").forEach(function (x) {
+      if (x.produitId !== produitId) return;
+      var q = Number(x.quantite || 0);
+      if (x.id === mouvementId) {
+        if (nouvelleQte === null) return;
+        q = nouvelleQte;
+      }
+      stock += x.type === "entree" ? q : -q;
+    });
+    return stock;
+  }
+
+  // Une vente ne peut être datée que d'aujourd'hui ou d'hier (une soirée
+  // se termine après minuit). Pas de date future, pas d'antidatage.
+  function datesVenteAutorisees() {
+    var t = new Date(Date.now());
+    var h = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    return { aujourdhui: t.toISOString().slice(0, 10), hier: h.toISOString().slice(0, 10) };
+  }
+
   function journaliserModification(m, action, apres, autorisePar) {
     LB_DB.add("historique_modifications", {
       departement: m.departement,
@@ -205,9 +231,16 @@
     }
     var delProduit = e.target.closest("[data-del-produit]");
     if (delProduit) {
-      if (!confirm("Supprimer ce produit et tout son historique de stock (entrées et ventes) ?")) return;
       var pid = delProduit.dataset.delProduit;
-      LB_DB.list("mouvements").filter(function (m) { return m.produitId === pid; }).forEach(function (m) {
+      var mvtsProduit = LB_DB.list("mouvements").filter(function (m) { return m.produitId === pid; });
+      var verrouilles = mvtsProduit.filter(function (m) { return !statutModification(m).peut; });
+      if (verrouilles.length) {
+        alert("Ce produit a " + verrouilles.length + " mouvement(s) verrouillé(s) (saisis il y a plus de 10 minutes). Il ne peut pas être supprimé : demandez au boss d'autoriser la modification de ces mouvements, ou conservez le produit.");
+        return;
+      }
+      if (!confirm("Supprimer ce produit et son historique de stock (" + mvtsProduit.length + " mouvement(s) encore dans le délai de 10 min) ? Chaque suppression sera tracée dans le journal des modifications.")) return;
+      mvtsProduit.forEach(function (m) {
+        journaliserModification(m, "suppression", null, statutModification(m).raison === "boss" ? "boss" : "delai_10min");
         LB_DB.remove("mouvements", m.id);
       });
       LB_DB.remove("produits", pid);
@@ -231,6 +264,10 @@
       if (nouvelleQteStr === null) return;
       var nouvelleQte = Number(nouvelleQteStr);
       if (!nouvelleQte || nouvelleQte <= 0) { alert("Quantité invalide."); return; }
+      if (stockProduit(m.produitId, m.id, nouvelleQte) < 0) {
+        alert("Modification refusée : le stock de « " + m.produitNom + " » deviendrait négatif.");
+        return;
+      }
 
       var nouveauPrix = Number(m.prixUnitaire || 0);
       if (m.type === "vente") {
@@ -259,6 +296,10 @@
       if (!s2.peut) {
         alert("Cette saisie ne peut plus être supprimée directement. Demandez au boss de l'autoriser depuis son espace.");
         renderAll();
+        return;
+      }
+      if (stockProduit(m2.produitId, m2.id, null) < 0) {
+        alert("Suppression refusée : le stock de « " + m2.produitNom + " » deviendrait négatif (des ventes dépendent de cette entrée).");
         return;
       }
       if (!confirm("Supprimer ce mouvement (" + m2.produitNom + ", quantité " + m2.quantite + ") ? L'action sera tracée dans le journal des modifications.")) return;
@@ -301,7 +342,12 @@
   // ---- formulaires de chaque département ----
   DEPARTEMENTS.forEach(function (dep) {
     var stockDateField = document.getElementById("vente-date-" + dep.id);
-    if (stockDateField) stockDateField.value = today;
+    if (stockDateField) {
+      var dvLim = datesVenteAutorisees();
+      stockDateField.value = today;
+      stockDateField.min = dvLim.hier;
+      stockDateField.max = dvLim.aujourdhui;
+    }
 
     var stockForm = document.getElementById("stock-form-" + dep.id);
     if (stockForm) {
@@ -352,6 +398,13 @@
         var qte = Number(document.getElementById("vente-qte-" + dep.id).value || 0);
         var stockDispo = Number(opt.dataset.stock || 0);
         if (qte <= 0) return;
+        var dateVente = document.getElementById("vente-date-" + dep.id).value;
+        var dv = datesVenteAutorisees();
+        if (dateVente !== dv.aujourdhui && dateVente !== dv.hier) {
+          alert("Date refusée : une vente ne peut être datée que d'aujourd'hui ou d'hier.");
+          document.getElementById("vente-date-" + dep.id).value = dv.aujourdhui;
+          return;
+        }
         if (qte > stockDispo) {
           alert("Stock insuffisant : il ne reste que " + stockDispo + " en stock pour ce produit.");
           return;
@@ -365,7 +418,8 @@
           quantite: qte,
           prixUnitaire: prixUnitaire,
           montant: prixUnitaire * qte,
-          date: document.getElementById("vente-date-" + dep.id).value,
+          date: dateVente,
+          dateSaisie: dv.aujourdhui,
         });
         venteForm.reset();
         document.getElementById("vente-date-" + dep.id).value = today;
@@ -376,8 +430,8 @@
 
   // reset all data
   document.getElementById("resetData").addEventListener("click", function () {
-    if (confirm("Effacer toutes les données de test (agenda, produits, stock, ventes, journal des modifications, et toutes les demandes envoyées par le site public) ?")) {
-      LB_DB.clearAll();
+    if (confirm("Effacer les données de test (agenda, clients, boissons, dépenses et demandes du site public) ? Les produits, le stock, les ventes et le journal des modifications sont conservés et ne peuvent pas être effacés d'ici.")) {
+      LB_DB.clearAll(["produits", "mouvements", "historique_modifications"]);
       location.reload();
     }
   });

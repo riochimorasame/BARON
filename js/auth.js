@@ -21,7 +21,17 @@
   var loginError = document.getElementById("loginError");
   var logoutBtn = document.getElementById("logoutBtn");
 
+  var bossOnly = shell.hasAttribute("data-boss-only");
+  var bossLink = document.getElementById("bossLink");
+
   firebase.auth().onAuthStateChanged(function (user) {
+    // Lien vers l'espace boss : visible uniquement pour le compte boss.
+    if (bossLink) bossLink.style.display = LB_IS_BOSS(user) ? "" : "none";
+    // Page réservée au boss : un compte gérant est renvoyé vers son espace.
+    if (user && bossOnly && !LB_IS_BOSS(user)) {
+      location.replace("admin.html");
+      return;
+    }
     if (user) {
       gate.style.display = "none";
       shell.style.display = "flex";
