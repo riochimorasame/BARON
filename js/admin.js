@@ -117,6 +117,19 @@
     var mouvements = LB_DB.list("mouvements", { sortBy: "createdAt", dir: "desc" }).filter(function (m) { return m.departement === dep.id; });
     var stats = computeStats(dep, produits, mouvements);
 
+    // suggestions de noms dans le formulaire « Ajouter du stock »
+    var nomInput = document.getElementById("stock-nom-" + dep.id);
+    if (nomInput) {
+      var dl = document.getElementById("stock-list-" + dep.id);
+      if (!dl) {
+        dl = document.createElement("datalist");
+        dl.id = "stock-list-" + dep.id;
+        nomInput.parentNode.appendChild(dl);
+        nomInput.setAttribute("list", dl.id);
+      }
+      dl.innerHTML = produits.map(function (p) { return '<option value="' + esc(p.nom) + '"></option>'; }).join("");
+    }
+
     var ca = 0;
     Object.keys(stats).forEach(function (id) { ca += stats[id].montant; });
     var caEl = document.getElementById("ca-" + dep.id);
@@ -131,7 +144,8 @@
         return "<tr><td>" + esc(p.nom) + "</td><td>" + Number(p.prix || 0).toLocaleString("fr-FR") + " F</td>" +
           "<td>" + s.entree + "</td><td>" + s.vente + "</td><td><strong>" + stockActuel + "</strong></td>" +
           "<td>" + s.montant.toLocaleString("fr-FR") + " F</td>" +
-          '<td><button class="btn ghost small" data-del-produit="' + p.id + '">Supprimer</button></td></tr>';
+          '<td style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn small" data-reappro="' + p.id + '">+ Réapprovisionner</button>' +
+          '<button class="btn ghost small" data-del-produit="' + p.id + '">Supprimer</button></td></tr>';
       }).join("") || '<tr><td colspan="7" style="color:var(--smoke)">Aucun produit enregistré.</td></tr>';
     }
 
@@ -227,6 +241,22 @@
       document.getElementById("eventFormSubmit").textContent = "Mettre à jour la soirée";
       document.getElementById("eventFormCancel").style.display = "inline-flex";
       document.getElementById("eventForm").scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    var reappro = e.target.closest("[data-reappro]");
+    if (reappro) {
+      var prod = LB_DB.get("produits", reappro.dataset.reappro);
+      if (!prod) return;
+      var dId = prod.departement;
+      document.getElementById("stock-nom-" + dId).value = prod.nom;
+      document.getElementById("stock-prix-" + dId).value = prod.prix || "";
+      var qteEl = document.getElementById("stock-qte-" + dId);
+      qteEl.value = 1;
+      var msgEl = document.getElementById("stock-msg-" + dId);
+      if (msgEl) msgEl.textContent = "Réapprovisionnement de « " + prod.nom + " » — stock actuel : " + stockProduit(prod.id, "", 0) + ". Indiquez la quantité reçue.";
+      document.getElementById("stock-form-" + dId).scrollIntoView({ behavior: "smooth", block: "center" });
+      qteEl.focus();
+      qteEl.select();
       return;
     }
     var delProduit = e.target.closest("[data-del-produit]");
@@ -358,7 +388,10 @@
         var prix = Number(document.getElementById("stock-prix-" + dep.id).value || 0);
         if (!nomRaw || qte <= 0) return;
 
+        var msgEl2 = document.getElementById("stock-msg-" + dep.id);
         function ajouterMouvementEntree(produitId, produitNom) {
+          var avant = stockProduit(produitId, "", 0);
+          if (msgEl2) msgEl2.textContent = "✓ +" + qte + " ajouté(s) à « " + produitNom + " » — stock : " + avant + " → " + (avant + qte) + ".";
           LB_DB.add("mouvements", {
             departement: dep.id,
             produitId: produitId,

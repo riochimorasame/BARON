@@ -40,7 +40,7 @@ service cloud.firestore {
     // comptes connectés sont des gérants.
     function isBoss() {
       return request.auth != null
-        && request.auth.token.email.lower() in ['lebaron+boss@gmail.com'];
+        && request.auth.token.email.lower() in ['baron@gmail.com'];
     }
     // Mouvement encore dans la fenêtre de modification libre (10 min).
     function dansLeDelai(d) {

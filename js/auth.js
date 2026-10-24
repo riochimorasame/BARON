@@ -52,7 +52,17 @@
         // proprement avec la session désormais authentifiée.
         location.reload();
       })
-      .catch(function () {
+      .catch(function (err) {
+        var messages = {
+          "auth/invalid-credential": "E-mail ou mot de passe incorrect, ou ce compte n'existe pas encore dans Firebase.",
+          "auth/invalid-login-credentials": "E-mail ou mot de passe incorrect, ou ce compte n'existe pas encore dans Firebase.",
+          "auth/user-not-found": "Ce compte n'existe pas dans Firebase (Authentication → Users → Add user).",
+          "auth/wrong-password": "Mot de passe incorrect.",
+          "auth/invalid-email": "Adresse e-mail invalide.",
+          "auth/too-many-requests": "Trop de tentatives : patientez quelques minutes avant de réessayer.",
+          "auth/network-request-failed": "Pas de connexion internet."
+        };
+        loginError.textContent = messages[err && err.code] || ("Connexion impossible (" + ((err && err.code) || "erreur inconnue") + ").");
         loginError.classList.add("show");
       });
   });
